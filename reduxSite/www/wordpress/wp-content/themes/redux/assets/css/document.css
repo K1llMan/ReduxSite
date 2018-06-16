@@ -1,0 +1,71 @@
+.flow-down {
+    display: flex;
+    flex-flow: column;
+}
+
+.flow-right {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+/* Abilities table */
+.ability-row {
+    margin: 8px;
+    
+    display: flex;
+    align-items: center;
+}
+
+.ability-caption {
+    width: 300px;
+}
+
+.abilities-count {
+    width: 100px;
+    margin: 0 8px 0 8px;
+    
+    display: flex;
+    align-items: center;
+}
+
+.abilities-count .winrate {
+    font-size: 12px;
+}
+
+.abilities-count .pick {
+}
+
+.bars {
+    align-items: stretch;
+}
+
+.pick-bar {
+    height: 20px;
+    width: 400px;
+    
+    display: flex;
+    flex-grow: 1;
+}
+
+.pick-bar .pick {
+    background-color: orange;
+}
+
+.pick-bar .ban {
+    background-color: red;
+}
+
+.winrate-bar {
+    height: 10px;
+
+    display: flex;
+    flex-grow: 1;
+}
+
+.winrate-bar .win {
+    background-color: green;
+}
+
+.winrate-bar .loss {
+    background-color: red;
+}

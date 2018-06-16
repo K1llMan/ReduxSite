@@ -1,0 +1,13 @@
+[
+    {
+    	"id": "build_cherub",
+        "title": "Cherub",
+        "hero": "npc_dota_hero_enchantress",
+        "attr": "int",
+        "desc": "desc desc desc",
+        "author": 93913344,
+        "categories": "",
+        "balanced": "['cherub_sleep_cloud','cherub_synthesis','cherub_explosive_spore','cherub_flower_garden','garden_pink_blossom_base','garden_blue_blossom_base']",
+        "unbalanced": "['cherub_sleep_cloud','cherub_synthesis','cherub_explosive_spore','cherub_flower_garden','garden_pink_blossom_base','garden_blue_blossom_base']"
+    }
+]
