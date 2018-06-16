@@ -68,15 +68,17 @@ $(function () {
             function(val, i) { return val.id.replace(/check_/, ''); }
         );
         
-        // Send the data using post 
-        var posting = $.post( ajaxUrl, {
-                action: 'remove_selected',
-                id_list: id_list
-            })
-        .done(function( data ){
-            $.each(checked_list, function(index, item){
-                $(item).parents('tr').remove();
-            });
+        // Delete data
+        $.ajax('api/messages', {
+            type: 'DELETE',
+            data: {
+                ids: id_list
+            },
+            success: function (data) {
+                $.each(checked_list, function (index, item) {
+                    $(item).parents('tr').remove();
+                });
+            }
         });
     };
     
@@ -97,27 +99,34 @@ $(function () {
                 if (reply_value.length > 1024)
                     break;
 
-                // Send the data using post
-                var posting = $.post( ajaxUrl, {
-                        action: action,
-                        id: id,
-                        reply: reply_value
-                    });
-
+                // Update data
+                $.ajax('api/messages', {
+                    type: 'PUT',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({
+                            ID: id,
+                            Reply: reply_value
+                        }),
+                    success: function (response) {
+                        //...
+                    },
+                    error: function (jqXHR, exception) {
+                        console.log(exception);
+                    }
+                });
                 break;
 
             case 'remove_reply':
-                // Send the data using post 
-                var posting = $.post( ajaxUrl, {
-                        action: action,
-                        id: id
-                    });
-
-                posting.done(function( data )
-                {
-                    $('#id_' + id).parent().remove();
+                $.ajax('api/messages', {
+                    type: 'PUT',
+                    data: {
+                        id: id,
+                        reply: ""
+                    },
+                    success: function (data) {
+                        $('#id_' + id).parent().remove();
+                    }
                 });
-
                 break;
         }
 
@@ -156,24 +165,24 @@ $(function () {
             var page = $('<div class="messages"></div>');
             
             $.get( "api/messages")
-                .done(function( data ) {
-                    var table = generateTable(data);
+            .done(function( data ) {
+                var table = generateTable(data);
 
-                    if (context.isLogged()){
-                        var deleteButton = $(Templater.useTemplate('delete'));
+                if (context.isLogged()){
+                    var deleteButton = $(Templater.useTemplate('delete'));
                          
-                        deleteButton.find('#removeSelectedMenu').click(removeSelected);
+                    deleteButton.find('#removeSelectedMenu').click(removeSelected);
 
-                        $('.messages').append(getHiddenDiv());
-                    }
+                    $('.messages').append(getHiddenDiv());
+                }
 
-                    $('.messages').append(table);
-                    $('.messages').append(deleteButton);
+                $('.messages').append(table);
+                $('.messages').append(deleteButton);
 
-                    // Show table
-                    context.readyForDisplay(true);
-                    $('.tooltipped').tooltip({delay: 50});
-                });
+                // Show table
+                context.readyForDisplay(true);
+                $('.tooltipped').tooltip({delay: 50});
+            });
                 
             $('.main-content').append(page);            
         }
