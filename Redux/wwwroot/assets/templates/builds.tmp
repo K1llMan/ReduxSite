@@ -1,0 +1,6 @@
+<template id="builds-page">
+    <div class="builds">
+        <a class="waves-effect waves-light btn" id="download"><i class="material-icons left">cloud</i>Download</a>
+        <input type="file" id="file-input" />
+    </div>
+</template>

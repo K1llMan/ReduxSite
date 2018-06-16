@@ -1,0 +1,11 @@
+<template id="hero">
+    <div class="ability-row flow-right">
+        <div class="ability-caption"> {{caption}} </div>
+        <div class="abilities-count flow-down">{{pickCount}}</div>
+        <div class="flow-down bars">
+            <div class="pick-bar">
+                <div class="pick" style="width: {{pickPerc}}%;"></div>
+            </div>
+        </div>
+    </div>
+</template>

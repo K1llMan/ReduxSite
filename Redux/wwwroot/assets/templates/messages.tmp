@@ -1,0 +1,52 @@
+<template id="table">
+    <table class="highlight responsive-table">
+        <thead>
+            <tr>
+                 <th>Comment</th>
+                 <th style="min-width: 150px;">From</th>
+                 <th>Reply</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</template>
+
+<template id="row">
+    <tr>
+        <td>{{comment}}</td>
+        <td data-SteamID="{{steamID}}">{{name}}</td>
+        <td id="id_{{id}}">{{reply}}</td>
+    </tr>
+</template>
+
+<template id="hidden-div">
+    <div class="hide" id="hiddenDiv">
+        <div id="submitReply">
+            <label for="reply">Reply</label>
+            <textarea name="reply" id="textarea" class="materialize-textarea" length="1024"></textarea>
+            <button class="btn" id="sendButton">Send</button>
+            <button class="btn" id="cancelButton">Cancel</button>
+            <button class="btn" id="removeButton">Remove</button>
+        </div>
+    </div>
+</template>
+
+<template id="check">
+    <td>
+        <p class="center">
+           <label>
+              <input type="checkbox" id="check_{{id}}" />
+              <span></span>
+           </label>
+        </p> 
+    </td>
+</template>
+
+<template id="delete">
+    <div class="fixed-action-btn horizontal" style="bottom: 25px; right: 24px;">
+        <a class="btn-floating btn-large red tooltipped" data-position="top" data-delay="50" data-tooltip="Remove" id="removeSelectedMenu">
+            <i class="large material-icons">delete</i>
+        </a>
+    </div>
+</template>
