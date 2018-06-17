@@ -178,6 +178,7 @@ $(function () {
                 }
 
                 $('.messages').append(table);
+                $('.messages').append($(Templater.useTemplate('pagination')));
 
                 // Show table
                 context.readyForDisplay(true);

@@ -20,9 +20,11 @@ namespace Redux.Controllers
         [HttpGet]
         public object GetMessages(int page = 1, int pageSize = 50)
         {
+            int total = (int) Program.Control.Messages.Count;
             return new Dictionary<string, object> {
-                { "total", (int)Program.Control.Messages.Count },
+                { "total", total / pageSize },
                 { "page", page },
+                { "pageCount", page },
                 { "pageSize", pageSize },
                 { "rows", Program.Control.Messages.GetMessages(page, pageSize) }
             };
