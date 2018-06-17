@@ -6,7 +6,7 @@ $(function () {
 
     // Generate table
     function generateTable( data ){
-        var rows = data;
+        var rows = data.rows;
 
         var table = $(Templater.useTemplate('table'));
         
@@ -71,9 +71,9 @@ $(function () {
         // Delete data
         $.ajax('api/messages', {
             type: 'DELETE',
-            data: {
+            data: JSON.stringify({
                 ids: id_list
-            },
+            }),
             success: function (data) {
                 $.each(checked_list, function (index, item) {
                     $(item).parents('tr').remove();
@@ -119,10 +119,10 @@ $(function () {
             case 'remove_reply':
                 $.ajax('api/messages', {
                     type: 'PUT',
-                    data: {
+                    data: JSON.stringify({
                         id: id,
                         reply: ""
-                    },
+                    }),
                     success: function (data) {
                         $('#id_' + id).parent().remove();
                     }
@@ -174,10 +174,10 @@ $(function () {
                     deleteButton.find('#removeSelectedMenu').click(removeSelected);
 
                     $('.messages').append(getHiddenDiv());
+                    $('.messages').append(deleteButton);
                 }
 
                 $('.messages').append(table);
-                $('.messages').append(deleteButton);
 
                 // Show table
                 context.readyForDisplay(true);

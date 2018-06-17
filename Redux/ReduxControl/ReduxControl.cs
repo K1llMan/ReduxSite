@@ -11,6 +11,8 @@ namespace Redux
 
         public ReduxSettings Settings { get; set; }
 
+        public ReduxMessages Messages { get; }
+
         /// <summary>
         /// JWT (JSON Web Token) для авторизации пользователей
         /// </summary>
@@ -24,6 +26,7 @@ namespace Redux
         {
             string baseDir = AppDomain.CurrentDomain.BaseDirectory;
             Settings = new ReduxSettings(Path.Combine(baseDir, "ReduxSettings.json"));
+            Messages = new ReduxMessages(Settings.DB);
 
             if (Settings.JWTKey.Length < 16)
                 Logger.WriteToTrace("Для корректной работы JWT ключ должен быть не менее 16 символов.", TraceMessageKind.Error);

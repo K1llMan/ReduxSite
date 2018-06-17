@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+
+using Common;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,16 +18,33 @@ namespace Redux.Controllers
     {
         // GET api/messages
         [HttpGet]
-        public object GetMessages(int page = 0, int count = 10)
+        public object GetMessages(int page = 1, int pageSize = 50)
         {
-            return new List<Dictionary<string, object>> {
-                new Dictionary<string, object>{
-                    { "ID", 0 },
-                    {"Comment", "test"},
-                    {"SteamID", 99349097012},
-                    {"Nickname", "TestNick"},
-                    {"Reply", "test"},
-            }};
+            return new Dictionary<string, object> {
+                { "total", (int)Program.Control.Messages.Count },
+                { "page", page },
+                { "pageSize", pageSize },
+                { "rows", Program.Control.Messages.GetMessages(page, pageSize) }
+            };
+        }
+
+        // GET api/messages/{SteamID list}
+        [HttpGet("{ids}")]
+        [Authorize(Roles = "Game")]
+        public object GetPlayersMessages(string ids)
+        {
+            try
+            {
+                List<decimal> idList = ids.Split(',').Select(i => Convert.ToDecimal(i)).ToList();
+
+                return Program.Control.Messages.GetPlayersMessages(idList);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteToTrace($"Ошибка фомировании списка SteamID: {ex}", TraceMessageKind.Error);
+            }
+
+            return null;
         }
 
         // POST api/messages
@@ -31,6 +52,17 @@ namespace Redux.Controllers
         [Authorize(Roles = "Game")]
         public void PostMessage()
         {
+            try
+            {
+                StreamReader reader = new StreamReader(Request.Body);
+                JObject obj = JObject.Parse(reader.ReadToEnd());
+
+                Program.Control.Messages.PostMessage(obj);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteToTrace($"Ошибка при добавления сообщения: {ex}", TraceMessageKind.Error);
+            }
         }
 
         // PUT api/messages
@@ -38,8 +70,17 @@ namespace Redux.Controllers
         [Authorize(Roles = "Admin, Game")]
         public void ChangeMessage()
         {
-            StreamReader reader = new StreamReader(Request.Body);
-            JObject obj = JObject.Parse(reader.ReadToEnd());
+            try
+            {
+                StreamReader reader = new StreamReader(Request.Body);
+                JObject obj = JObject.Parse(reader.ReadToEnd());
+
+                Program.Control.Messages.ChangeMessage(obj);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteToTrace($"Ошибка при изменении сообщения: {ex}", TraceMessageKind.Error);
+            }
         }
 
         // DELETE api/messages
@@ -47,6 +88,17 @@ namespace Redux.Controllers
         [Authorize(Roles = "Admin")]
         public void DeleteMessage()
         {
+            try
+            {
+                StreamReader reader = new StreamReader(Request.Body);
+                JObject obj = JObject.Parse(reader.ReadToEnd());
+
+                Program.Control.Messages.DeleteMessages(obj);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteToTrace($"Ошибка при удалении сообщения: {ex}", TraceMessageKind.Error);
+            }
         }
     }
 }

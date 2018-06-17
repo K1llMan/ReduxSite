@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
@@ -28,7 +30,16 @@ namespace Redux
 
         public JWTUser IsValidUser(string userName, string password)
         {
-            return new JWTUser { Name = "Admin", Role = "Admin" };
+            var row = db.Query(
+                "select *" +
+                " from redux_users" +
+                $" where \"Username\" = '{userName}'")
+                .FirstOrDefault();
+
+            if (row == null || row.Password.ToString() != password)
+                return null;
+
+            return new JWTUser { Name = row.Username.ToString(), Role = row.Role.ToString() };
         }
 
         public JwtSecurityToken GenerateToken(string userName, string password)
@@ -40,8 +51,7 @@ namespace Redux
             if (user == null)
                 return null;
 
-            var claims = new Claim[]
-            {
+            Claim[] claims = {
                 new Claim(ClaimTypes.Name, user.Name),
                 new Claim(ClaimTypes.Role, user.Role),
                 new Claim(JwtRegisteredClaimNames.Exp, $"{new DateTimeOffset(DateTime.Now.AddDays(1)).ToUnixTimeSeconds()}"),
