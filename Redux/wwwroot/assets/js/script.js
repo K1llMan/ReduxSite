@@ -85,19 +85,27 @@ $(function () {
                 Auth.Logout();
                 logout.remove();
                 $("#login-btn").css({ "display": "list-item" });
+                getModules();
             });
 
             $("#nav-mobile").prepend(logout);
             $("#login-btn").css({ "display": "none" });
+            getModules();
         });
     });
 
-    $('.modal').modal();
+    $('.modal').modal({
+        complete: function() {
+            $("#pass").val('');
+            $("#pass").blur();
+        }
+    });
 
     // Send the data using post 
     function getModules() {
         $.get( "api/modules")
-            .done(function( data ) {
+            .done(function (data) {
+                $('.navigation').html('');
                 modules = data;
 
                 // Generate navigation
@@ -108,7 +116,7 @@ $(function () {
                     });
                 
                     $('.navigation').append(navRow);
-                })
+                });
 
                 // Manually trigger a hashchange to start the app.
                 $(window).trigger('hashchange');
