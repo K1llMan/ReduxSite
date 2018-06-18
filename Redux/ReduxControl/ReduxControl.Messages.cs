@@ -21,9 +21,11 @@ namespace Redux
         {
             get
             {
-                return (decimal)db.Query(
+                var result = db.Query(
                     "select count(*)" +
-                    " from redux_messages").Single().count;
+                    " from redux_messages");
+
+                return result == null ? 0 : (decimal)result.Single().count;
             }
         }
 

@@ -74,6 +74,26 @@ $(function () {
         render(decodeURI(window.location.hash));
     });
 
+    // Authorization
+    $('#login').click(function () {
+        var name = $("#name").val();
+        var pass = $("#pass").val();
+
+        Auth.Login(name, pass, function () {
+            var logout = $("<li id=\"login-info\"><a>{0}</a></li>".format(Auth.User().Name + " (Logout)"));
+            logout.click(function () {
+                Auth.Logout();
+                logout.remove();
+                $("#login-btn").css({ "display": "list-item" });
+            });
+
+            $("#nav-mobile").prepend(logout);
+            $("#login-btn").css({ "display": "none" });
+        });
+    });
+
+    $('.modal').modal();
+
     // Send the data using post 
     function getModules() {
         $.get( "api/modules")

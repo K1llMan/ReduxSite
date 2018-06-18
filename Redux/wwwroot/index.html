@@ -1,4 +1,4 @@
-<html>
+﻿<html>
 <head>
     <meta charset="utf-8" />
     <title></title>
@@ -13,26 +13,54 @@
     <script type="text/javascript" src="assets/js/auth.js"></script>
     <script type="text/javascript" src="assets/js/script.js"></script>
 </head>
-<body class="container">
-    <div class="topBar row">
-        <div class="white col s12 z-depth-1">
-            <div class="right"><?php wp_loginout(); ?></div>
-        </div>
-    </div>     
-    <div class="main row">
-        <div class="navigationWrapper col s2">
-            <div class="navigation white z-depth-1">
+<body>
+    <!-- Modal Structure -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <h4 class="center">Login form</h4>
+            <div class="row">
+                <div class="input-field col s6 offset-s3">
+                    <input id="name" type="text" class="validate">
+                    <label for="name">Login</label>
+                </div>
+                <div class="input-field col s6 offset-s3">
+                    <input id="pass" type="text" class="validate">
+                    <label for="pass">Password</label>
+                </div>
             </div>
         </div>
+        <div class="modal-footer">
+            <a id="login" class="modal-close waves-effect waves-green btn-flat">Login</a>
+        </div>
+    </div>
 
-        <div class="col s10" id="content">
-            <div class="col s12 loading-container">
-                Loading...
+    <div class="navbar-fixed row">
+        <nav>
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo">Logo</a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a id="login-btn" class="modal-trigger" href="#login-modal">Login</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <div class="container">
+        <div class="main row">
+            <div class="navigationWrapper col s2">
+                <div class="navigation white z-depth-1">
+                </div>
             </div>
 
-            <div class="main-content white col s12 z-depth-1">
-            </div>
-        </div> <!-- #content-->
+            <div class="col s10" id="content">
+                <div class="col s12 loading-container">
+                    Loading...
+                </div>
+
+                <div class="main-content white col s12 z-depth-1">
+                </div>
+            </div> <!-- #content-->
+        </div>
     </div>
 </body>
 </html>

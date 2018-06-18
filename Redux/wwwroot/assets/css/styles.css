@@ -153,6 +153,10 @@ td, th {
 /*--------------------
     Pages
 --------------------*/
+#login-modal {
+    width: 30% !important; 
+}
+
 .page {
     visibility: collapse;
 }
