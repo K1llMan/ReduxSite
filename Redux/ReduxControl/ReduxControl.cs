@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Security.Claims;
 
 using Common;
 
@@ -18,7 +19,7 @@ namespace Redux
         /// <summary>
         /// JWT (JSON Web Token) для авторизации пользователей
         /// </summary>
-        public JWTControl JWT { get; }
+        public JwtControl JWT { get; }
 
         #endregion Свойства
 
@@ -34,7 +35,27 @@ namespace Redux
             if (Settings.JWTKey.Length < 16)
                 Logger.WriteToTrace("Для корректной работы JWT ключ должен быть не менее 16 символов.", TraceMessageKind.Error);
 
-            JWT = new JWTControl(Settings.DB, Settings.JWTKey);
+            // Делегат проверки пользователя и формирования требований к пользователю
+            CheckUser check = d => {
+                dynamic row = Settings.DB.Query(
+                    "select *" +
+                    " from redux_users" +
+                    $" where \"Username\" = '{d["user"]}'");
+
+                if (row == null)
+                    return null;
+
+                row = row.Single();
+                if (row.Password.ToString() != d["password"])
+                    return null;
+
+                return new Claim[] {
+                    new Claim(ClaimTypes.Name, row.Username.ToString()),
+                    new Claim(ClaimTypes.Role, row.Role.ToString())
+                };
+            };
+            
+            JWT = new JwtControl(check, Settings.JWTKey);
         }
 
         #endregion Основные функции
