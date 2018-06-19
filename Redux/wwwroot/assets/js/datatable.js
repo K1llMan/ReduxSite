@@ -24,12 +24,41 @@
     function addHeaderCheckBox() {
         var checkBox = $('<th class="select"><label><input type="checkbox"/><span></span></label></th>');
         checkBox.find('label input').attr('id', 'headerCheck');
+        checkBox.find('label input').change(function () {
+            var isChecked = $(this).is(":checked");
+
+            datatable.table.find('tbody input:visible')
+                .prop("checked", isChecked);
+        });
+
         return checkBox;
     }
 
     function addCheckBox(id) {
         var checkBox = $('<td class="select"><label><input type="checkbox"/><span></span></label></td>');
         checkBox.find('label input').attr('id', id);
+
+        checkBox.change(function () {
+            var headerCheck = datatable.table.find('thead input');
+
+            var selectedCount = 0;
+            var count = 0;
+            datatable.table.find('tbody input:visible')
+                .map(function (i, check) {
+                    count++;
+                    if ($(check).is(":checked"))
+                        selectedCount++;
+                });
+
+            headerCheck.prop("indeterminate", false);
+            if (selectedCount == count)
+                headerCheck.prop("checked", true);
+            else if (selectedCount == 0)
+                headerCheck.prop("checked", false);
+            else
+                headerCheck.prop("indeterminate", true);
+        });
+
         return checkBox;
     }
 
@@ -67,6 +96,7 @@
             body.html('');
             for (var i = 0; i < rowsCount; i++) {
                 var tableRow = $('<tr></tr>');
+                tableRow.attr('num', i);
                 tableRow.append(addCheckBox('check_' + i));
 
                 $.each(this.headers, function (i, el) {
@@ -98,6 +128,10 @@
 
             body.find('tr:nth-child(' + (data.length) + ')').css({ 'borderBottom': 'none' });
             body.find('tr:nth-child(n+' + (data.length + 1) + ')').hide();            
+        }
+
+        table.getSelected = function() {
+            return this.find('tbody tr:visible').has('input:checked');
         }
 
         table.hideColumns = function(columns) {
@@ -156,6 +190,7 @@
         datatable.table.hideColumns(opt.hidden);
         datatable.table.hideSelection(opt.hideSelection);
 
+        datatable.table.getSelected();
 
         datatable.footer.hide(opt.hideFooter);
 
