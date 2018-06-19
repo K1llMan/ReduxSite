@@ -1,0 +1,51 @@
+.datatable {
+    background-color: #ffffff;
+    font-family: Roboto;
+    color: rgba(0, 0, 0, 0.7);
+    font-weight: bold;
+    padding: 16px;
+}
+
+.datatable .header,
+.datatable .footer {
+    padding: 20px 0;
+    height: 64px;
+}
+
+.datatable .header.hide,
+.datatable .footer.hide {
+    visibility: collapse;
+}
+
+.datatable .header {
+    font-size: 20px;
+}
+
+.datatable td, th {
+    padding: 12px 0;
+    height: 48px;
+    font-weight: bold;
+}
+
+.datatable td.select, th.select {
+    padding: 12px 0;
+    width: 36px;
+}
+
+.datatable th {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.38);
+}
+
+.datatable td {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.datatable tr:hover {
+    background-color: #eeeeee;
+}
+/*
+.datatable th:nth-child(3), td:nth-child(3) {
+    display: none;
+}*/
