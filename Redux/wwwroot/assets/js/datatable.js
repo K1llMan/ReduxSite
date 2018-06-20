@@ -9,6 +9,10 @@
             'col1': "Column 1", 'col2': "Column 2", 'col3': "Column 3", 'col4': 'Column 4', 'col5': 'Column 5', 'col6': 'Column 6',
             'col7': 'Column 7', 'col8': 'Column 8', 'col9': 'Column 9', 'col10': 'Column 10'
         },
+        'tooltips': {
+            'col1': "Column 1", 'col2': "Column 2", 'col3': "Column 3", 'col4': 'Column 4', 'col5': 'Column 5', 'col6': 'Column 6',
+            'col7': 'Column 7', 'col8': 'Column 8', 'col9': 'Column 9', 'col10': 'Column 10'
+        },
         'data': [],
         'total': 100,
         'page': 1,
