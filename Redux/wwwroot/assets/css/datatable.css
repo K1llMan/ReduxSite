@@ -45,7 +45,28 @@
 .datatable tr:hover {
     background-color: #eeeeee;
 }
-/*
-.datatable th:nth-child(3), td:nth-child(3) {
-    display: none;
-}*/
+
+.datatable .footer {
+    display: flex;
+    line-height: 1.5em;
+}
+
+.datatable .footer label {
+    padding: 0 10px;
+}
+
+.datatable .footer a {
+    color: rgba(0, 0, 0, 0.6);
+    padding: 12px;
+}
+
+.datatable .pagination {
+    width: 120px;    
+}
+
+.datatable select.browser-default {
+    width: 50px;
+    height: 24px;
+    font-size: 12px;
+    padding: 0;
+}
