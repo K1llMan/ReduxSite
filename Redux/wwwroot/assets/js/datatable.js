@@ -5,7 +5,10 @@
     var datatable;
     var opt = {
         'tableHeader': 'Testiiiiiing',
-        'headers': { 'col1': "Column 1", 'col2': "Column 2", 'col3': "Column 3" },
+        'headers': {
+            'col1': "Column 1", 'col2': "Column 2", 'col3': "Column 3", 'col4': 'Column 4', 'col5': 'Column 5', 'col6': 'Column 6',
+            'col7': 'Column 7', 'col8': 'Column 8', 'col9': 'Column 9', 'col10': 'Column 10'
+        },
         'data': [],
         'total': 100,
         'page': 1,
@@ -21,7 +24,7 @@
                 'page': page,
                 'pageSize': pageSize,
                 'data': [
-                    { 'col1': 'data41', 'col2': 'data41', 'col3': 'data41' },
+                    { 'col1': 'data41', 'col2': 'data41', 'col3': 'data41', 'col4': 'data51', 'col5': 'ololo', 'col6': '434525', 'col7': 'Column 7', 'col8': 'Column 8', 'col9': 'Column 9', 'col10': 'Column 10 dfgsdg sdg sdg  sdgsdgwegsd segsd gsdg serg sdgwsegsdfg sergsdg segsdfgdLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.' },
                     { 'col1': 'data1', 'col2': 'data2', 'col3': 'data3' },
                     { 'col1': 'data41', 'col2': 'data41', 'col3': 'data41' },
                     { 'col1': 'data11', 'col2': 'data21', 'col3': 'data31' },
@@ -188,7 +191,7 @@
     }
 
     function getFooter() {
-        var footer = $('<div class="footer"><label>Rows per page</label></div>');
+        var footer = $('<div class="footer"><label style="margin-left: auto;">Rows per page</label></div>');
 
         var pageSizeControl = $('<select class="browser-default">' +
                 '<option value="10" selected>10</option>' + 
@@ -219,6 +222,8 @@
         getHeader();
         getTable();
         getFooter();
+
+        datatable.addClass('z-depth-1');
     }
 
     $.fn.datatable = function (options) {

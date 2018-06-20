@@ -21,8 +21,16 @@
     font-size: 20px;
 }
 
+.datatable .data {
+    overflow-x: auto;
+}
+
+.datatable table {
+    white-space: nowrap;
+}
+
 .datatable td, th {
-    padding: 12px 0;
+    padding: 15px 25px;
     height: 48px;
     font-weight: bold;
 }
