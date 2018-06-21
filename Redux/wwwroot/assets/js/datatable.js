@@ -164,7 +164,7 @@
                 });
             });
 
-            body.find('tr:nth-child(' + (opt.rows.length) + ')').css({ 'borderBottom': 'none' });
+            //body.find('tr:nth-child(' + (opt.rows.length) + ')').css({ 'borderBottom': 'none' });
             body.find('tr:nth-child(n+' + (opt.rows.length + 1) + ')').hide();            
         }
 

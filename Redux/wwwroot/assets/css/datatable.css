@@ -3,7 +3,7 @@
     font-family: Roboto;
     color: rgba(0, 0, 0, 0.7);
     font-weight: bold;
-    padding: 16px;
+    border-radius: 5px;
 }
 
 .datatable .header,
@@ -19,6 +19,7 @@
 
 .datatable .header {
     font-size: 20px;
+    padding-left: 30px;
 }
 
 .datatable .data {
@@ -36,7 +37,7 @@
 }
 
 .datatable td.select, th.select {
-    padding: 12px 0 12px 10px;
+    padding: 12px 0 12px 30px;
     width: 36px;
 }
 
