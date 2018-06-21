@@ -165,7 +165,9 @@
             });
 
             //body.find('tr:nth-child(' + (opt.rows.length) + ')').css({ 'borderBottom': 'none' });
-            body.find('tr:nth-child(n+' + (opt.rows.length + 1) + ')').hide();            
+            body.find('tr:nth-child(n+' + (opt.rows.length + 1) + ')').hide();  
+
+            datatable.table.hideSelection(opt.hideSelection);
         }
 
         table.getSelected = function() {
