@@ -66,6 +66,12 @@
 .datatable .footer a {
     color: rgba(0, 0, 0, 0.6);
     padding: 12px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.datatable .footer a.disabled {
+    color: rgba(0, 0, 0, 0.25);
 }
 
 .datatable .pagination {
@@ -77,6 +83,7 @@
     height: 24px;
     font-size: 12px;
     padding: 0;
+    margin: 0 15px;
 }
 
 /*---------------------------------

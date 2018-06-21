@@ -13,7 +13,7 @@
             'col1': "Column 1", 'col2': "Column 2", 'col3': "Column 3", 'col4': 'Column 4', 'col5': 'Column 5', 'col6': 'Column 6',
             'col7': 'Column 7', 'col8': 'Column 8', 'col9': 'Column 9', 'col10': 'Column 10'
         },
-        'data': [],
+        'rows': [],
         'total': 100,
         'page': 1,
         'pageSize': 10,
@@ -27,7 +27,7 @@
                 'total': 100,
                 'page': page,
                 'pageSize': pageSize,
-                'data': [
+                'rows': [
                     { 'col1': 'data41', 'col2': 'data41', 'col3': 'data41', 'col4': 'data51', 'col5': 'ololo', 'col6': '434525', 'col7': 'Column 7', 'col8': 'Column 8', 'col9': 'Column 9', 'col10': 'Column 10 dfgsdg sdg sdg  sdgsdgwegsd segsd gsdg serg sdgwsegsdfg sergsdg segsdfgdLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.' },
                     { 'col1': 'data1', 'col2': 'data2', 'col3': 'data3' },
                     { 'col1': 'data41', 'col2': 'data41', 'col3': 'data41' },
@@ -133,17 +133,25 @@
         }
 
         table.updateData = function (data) {
-            opt.data = data.data;
+            opt.rows = data.rows;
 
             opt.total = data.total;
             opt.page = data.page;
             opt.pageSize = data.pageSize;
             opt.pageCount = opt.total / opt.pageSize;
 
+            // Update counters
+            datatable.footer.counter.update();
+
+            datatable.footer.find("#page-left").toggleClass('disabled', opt.page == 1);
+            datatable.footer.find("#page-right").toggleClass('disabled', opt.page == opt.pageCount);
+
+            // Fill rows set
             table.setRows();
 
+            // Fill rows
             var body = table.find('tbody');
-            $.each(opt.data, function (i, row) {
+            $.each(opt.rows, function (i, row) {
                 var tableRow = body.find('tr:nth-child(' + (i + 1) + ')');
                 if (tableRow.length == 0)
                     return;
@@ -156,8 +164,8 @@
                 });
             });
 
-            body.find('tr:nth-child(' + (opt.data.length) + ')').css({ 'borderBottom': 'none' });
-            body.find('tr:nth-child(n+' + (opt.data.length + 1) + ')').hide();            
+            body.find('tr:nth-child(' + (opt.rows.length) + ')').css({ 'borderBottom': 'none' });
+            body.find('tr:nth-child(n+' + (opt.rows.length + 1) + ')').hide();            
         }
 
         table.getSelected = function() {
@@ -195,7 +203,7 @@
     }
 
     function getFooter() {
-        var footer = $('<div class="footer"><label style="margin-left: auto;">Rows per page</label></div>');
+        var footer = $('<div class="footer"><label style="margin-left: auto;">Rows per page:</label></div>');
 
         var pageSizeControl = $('<select class="browser-default">' +
                 '<option value="10" selected>10</option>' + 
@@ -208,9 +216,35 @@
             datatable.table.getData();
         });
 
-        var pageControl = $('<div class="pagination"><a><i class="material-icons">chevron_left</i></a><a><i class="material-icons">chevron_rights</i></a></div>');
-        footer.append(pageControl);
+        var counter = $('<label></label>');
+        counter.update = function () {
+            var start = (opt.page - 1) * opt.pageSize + 1;
+            var end = start + opt.rows.length - 1;
+            counter.html(start + '-' + end + ' of ' + opt.total);
+        };
 
+        footer.append(counter);
+        footer.counter = counter;
+
+        var pageControl = $('<div class="pagination"></div>');
+        var left = $('<a id="page-left" class="disabled"><i class="material-icons">chevron_left</i></a>');
+        left.click(function () {
+            if (opt.page > 1) {
+                opt.page--;
+                datatable.table.getData();
+            }
+        });
+
+        var right = $('<a id="page-right" class="disabled"><i class="material-icons">chevron_rights</i></a>');
+        right.click(function () {
+            if (opt.page < opt.pageCount) {
+                opt.page++;
+                datatable.table.getData();
+            }
+        });
+
+        pageControl.append(left, right);
+        footer.append(pageControl);
 
         footer.hide = function(hide) {
             this.toggleClass('hide', hide);
@@ -239,17 +273,19 @@
         datatable.header.hide(opt.hideHeader);
 
         datatable.table.setHeaders(opt.headers);
-        datatable.table.getData();
 
         datatable.table.hideColumns(opt.hidden);
         datatable.table.hideSelection(opt.hideSelection);
 
         datatable.footer.hide(opt.hideFooter);
 
+        datatable.table.getData();
+
         return datatable;
     };
 })(jQuery);
 
+var dt;
 $(function() {
-    $('.datatable').datatable();
+    dt = $('.datatable').datatable();
 });
