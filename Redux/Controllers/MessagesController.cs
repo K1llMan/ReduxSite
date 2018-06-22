@@ -22,9 +22,9 @@ namespace Redux.Controllers
         {
             int total = (int) Program.Control.Messages.Count;
             return new Dictionary<string, object> {
-                { "total", total / pageSize },
+                { "total", total},
                 { "page", page },
-                { "pageCount", page },
+                { "pageCount", total / pageSize + 1 },
                 { "pageSize", pageSize },
                 { "rows", Program.Control.Messages.GetMessages(page, pageSize) }
             };

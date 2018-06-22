@@ -1,10 +1,9 @@
 ﻿/*-----------------------------------------------------------------------------
                              (jQuery 3.3.1)
 -----------------------------------------------------------------------------*/
-(function ($) {
-    var datatable;
-    var opt = {
-        'tableHeader': 'Testiiiiiing',
+/*  Options example:
+    {
+        'tableHeader': 'Testing',
         'fields': {
             'col1': {
                 'header': 'Column 1',
@@ -22,8 +21,10 @@
                 'header': 'Column 3',
                 'tooltip': 'Column 3',
                 'hidden': false,
-                'editable': true,
-                'size': 10
+                'editable': false,
+                'init': function (cell, data) {
+
+                }
             },
             'col4': {
                 'header': 'Column 4',
@@ -41,7 +42,7 @@
             'page': 1,
             'pageSize': 10,
             'pageCount': 1,
-            'rows': [],            
+            'rows': [],
         },
         'hideHeader': false,
         'hideFooter': false,
@@ -64,6 +65,31 @@
             }
 
             updateData(response);
+        },
+        'beforeDelete': function(rows) {
+
+        }
+    };
+*/
+
+(function ($) {
+    var datatable;
+    var opt = {
+        'tableHeader': '',
+        'fields': {
+        },
+        'data': {
+            'total': 100,
+            'page': 1,
+            'pageSize': 10,
+            'pageCount': 1,
+            'rows': [],            
+        },
+        'hideHeader': false,
+        'hideFooter': false,
+        'hideSelection': false,
+        'getData': function(page, pageSize, sort, sortDir, updateData) {
+
         },
         'beforeDelete': function(rows) {
             
@@ -230,8 +256,15 @@
                 tableRow.show();
 
                 $.each(Object.keys(row), function (i, key) {
+                    var field = opt.fields[key];
+                    if (!field)
+                        return;
+
                     var cell = tableRow.find('#' + key);
-                    cell.html(row[key]);
+                    if (field.init && !field.editable)
+                        opt.fields[key].init(cell, row);
+                    else
+                        cell.html(row[key]);
                 });
             });
 
@@ -244,9 +277,9 @@
         }
 
         table.removeSelected = function() {
-            var rowsData = this.getSelected().map(function (i, row) {
+            var rowsData = Array.from(this.getSelected().map(function (i, row) {
                 return opt.data.rows[parseInt($(row).attr('num'), 10)];
-            });
+            }));
 
             this.find('thead input').prop('checked', false);
             this.find('thead input').prop('indeterminate', false);
@@ -310,8 +343,9 @@
 
         var counter = $('<label></label>');
         counter.update = function () {
-            var start = (opt.data.page - 1) * opt.data.pageSize + 1;
-            var end = start + opt.data.rows.length - 1;
+            var end = (opt.data.page - 1) * opt.data.pageSize + opt.data.rows.length;
+            var start = end - opt.data.rows.length + (opt.data.rows.length > 0 ? 1 : 0);
+
             counter.html(start + '-' + end + ' of ' + opt.data.total);
         };
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Security.Claims;
 
 using Common;
@@ -40,12 +41,11 @@ namespace Redux
                 dynamic row = Settings.DB.Query(
                     "select *" +
                     " from redux_users" +
-                    $" where \"Username\" = '{d["user"]}'");
+                    $" where \"Username\" = '{d["user"]}'").FirstOrDefault();
 
                 if (row == null)
                     return null;
 
-                row = row.Single();
                 if (row.Password.ToString() != d["password"])
                     return null;
 

@@ -75,8 +75,8 @@ namespace Redux
                 " set {0} = {1}" +
                 " where \"ID\" = {2}";
 
-            if (!message["Reply"].IsNullOrEmpty())
-                query = string.Format(query, "\"Reply\"", $"'{message["Reply"].ToString()}'", message["ID"]);
+            if (message.ContainsKey("Reply"))
+                query = string.Format(query, "\"Reply\"", $"'{message["Reply"].ToString()}', \"IsPlayerRead\" = false", message["ID"]);
             else if (!message["IsPlayerRead"].IsNullOrEmpty())
                 query = string.Format(query, "\"IsPlayerRead\"", "true", message["ID"]);
             else 
