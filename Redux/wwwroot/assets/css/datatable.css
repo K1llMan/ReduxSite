@@ -71,6 +71,14 @@
     user-select: none;
 }
 
+.datatable .footer a i {
+    width: 24px;    
+}
+
+.datatable .footer a:hover i {
+    background-color: #eeeeee;
+}
+
 .datatable .footer a.disabled {
     color: rgba(0, 0, 0, 0.25);
 }

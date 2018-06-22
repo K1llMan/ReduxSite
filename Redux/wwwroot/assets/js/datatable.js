@@ -5,28 +5,48 @@
     var datatable;
     var opt = {
         'tableHeader': 'Testiiiiiing',
-        'headers': {
-            'col1': "Column 1", 'col2': "Column 2", 'col3': "Column 3", 'col4': 'Column 4', 'col5': 'Column 5', 'col6': 'Column 6',
-            'col7': 'Column 7', 'col8': 'Column 8', 'col9': 'Column 9', 'col10': 'Column 10'
+        'fields': {
+            'col1': {
+                'header': 'Column 1',
+                'tooltip': 'Column 1',
+                'hidden': false,
+                'editable': false
+            },
+            'col2': {
+                'header': 'Column 2',
+                'tooltip': 'Column 2',
+                'hidden': false,
+                'editable': false
+            },
+            'col3': {
+                'header': 'Column 3',
+                'tooltip': 'Column 3',
+                'hidden': false,
+                'editable': false
+            },
+            'col4': {
+                'header': 'Column 4',
+                'tooltip': 'Column 4',
+                'hidden': false,
+                'editable': true
+            }
         },
-        'tooltips': {
-            'col1': "Column 1", 'col2': "Column 2", 'col3': "Column 3", 'col4': 'Column 4', 'col5': 'Column 5', 'col6': 'Column 6',
-            'col7': 'Column 7', 'col8': 'Column 8', 'col9': 'Column 9', 'col10': 'Column 10'
+        'data': {
+            'total': 100,
+            'page': 1,
+            'pageSize': 10,
+            'pageCount': 1,
+            'rows': [],            
         },
-        'rows': [],
-        'total': 100,
-        'page': 1,
-        'pageSize': 10,
-        'pageCount': 1,
         'hideHeader': false,
         'hideFooter': false,
         'hideSelection': false,
-        'hidden': [],
         'getData': function(page, pageSize, sort, sortDir, updateData) {
             var response = {
                 'total': 100,
                 'page': page,
                 'pageSize': pageSize,
+                'pageCount': 10,
                 'rows': [
                     { 'col1': 'data41', 'col2': 'data41', 'col3': 'data41', 'col4': 'data51', 'col5': 'ololo', 'col6': '434525', 'col7': 'Column 7', 'col8': 'Column 8', 'col9': 'Column 9', 'col10': 'Column 10 dfgsdg sdg sdg  sdgsdgwegsd segsd gsdg serg sdgwsegsdfg sergsdg segsdfgdLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.' },
                     { 'col1': 'data1', 'col2': 'data2', 'col3': 'data3' },
@@ -39,6 +59,9 @@
             }
 
             updateData(response);
+        },
+        'beforeDelete': function(rows) {
+            
         }
     };
 
@@ -98,31 +121,29 @@
 
     function getTable() {
         var table = $('<div class="data"><table><thead><tr></tr></thead><tbody></tbody></table></div>');
-        table.setHeaders = function(headers) {
+        table.setHeaders = function() {
             var head = this.find('thead tr');
             head.append(addHeaderCheckBox());
-            $.each(Object.keys(headers), function (i, el) {
+            $.each(Object.keys(opt.fields), function (i, el) {
                 var cell = $('<th></th>');
                 cell.attr('id', el);
-                cell.html(headers[el]);
+                cell.html(opt.fields[el].header);
 
                 head.append(cell);
             });
-
-            table.headers = Object.keys(headers);
         }
 
         table.setRows = function() {
             var body = this.find('tbody');
             body.html('');
-            for (var i = 0; i < opt.pageSize; i++) {
+            for (var i = 0; i < opt.data.pageSize; i++) {
                 var tableRow = $('<tr></tr>');
                 tableRow.attr('num', i);
                 tableRow.append(addCheckBox('check_' + i));
 
-                $.each(this.headers, function (i, el) {
+                $.each(Object.keys(opt.fields), function (i, key) {
                     var cell = $('<td></td>');
-                    cell.attr('id', el);
+                    cell.attr('id', key);
                     cell.html();
 
                     tableRow.append(cell);
@@ -130,28 +151,26 @@
 
                 body.append(tableRow);
             }
+
+            datatable.table.hideColumns();
+            datatable.table.hideSelection();
         }
 
         table.updateData = function (data) {
-            opt.rows = data.rows;
-
-            opt.total = data.total;
-            opt.page = data.page;
-            opt.pageSize = data.pageSize;
-            opt.pageCount = opt.total / opt.pageSize;
+            opt.data = data;
 
             // Update counters
             datatable.footer.counter.update();
 
-            datatable.footer.find("#page-left").toggleClass('disabled', opt.page == 1);
-            datatable.footer.find("#page-right").toggleClass('disabled', opt.page == opt.pageCount);
+            datatable.footer.find("#page-left").toggleClass('disabled', opt.data.page == 1);
+            datatable.footer.find("#page-right").toggleClass('disabled', opt.data.page == opt.data.pageCount);
 
             // Fill rows set
             table.setRows();
 
             // Fill rows
             var body = table.find('tbody');
-            $.each(opt.rows, function (i, row) {
+            $.each(opt.data.rows, function (i, row) {
                 var tableRow = body.find('tr:nth-child(' + (i + 1) + ')');
                 if (tableRow.length == 0)
                     return;
@@ -164,37 +183,49 @@
                 });
             });
 
-            //body.find('tr:nth-child(' + (opt.rows.length) + ')').css({ 'borderBottom': 'none' });
-            body.find('tr:nth-child(n+' + (opt.rows.length + 1) + ')').hide();  
-
-            datatable.table.hideSelection(opt.hideSelection);
+            //body.find('tr:nth-child(' + (opt.data.rows.length) + ')').css({ 'borderBottom': 'none' });
+            body.find('tr:nth-child(n+' + (opt.data.rows.length + 1) + ')').hide();
         }
 
         table.getSelected = function() {
             return this.find('tbody tr:visible').has('input:checked');
         }
 
+        table.removeSelected = function() {
+            var rowsData = table.getSelected().map(function (i, row) {
+                return opt.data.rows[parseInt($(row).attr('num'), 10)];
+            });
+
+            if (opt.beforeDelete)
+                opt.beforeDelete(rowsData);
+
+            datatable.table.getData();
+        }
+
         table.getData = function() {
             if (!opt.getData)
                 return;
 
-            opt.getData(opt.page, opt.pageSize, null, 'asc', table.updateData);
+            opt.getData(opt.data.page, opt.data.pageSize, null, 'asc', table.updateData);
         }
 
-        table.hideColumns = function(columns) {
+        table.hideColumns = function() {
             // Show all columns
             this.find('th:not(.select),td:not(.select)').show();
 
             // Hide selected
-            $.each(columns, function (i, name) {
-                var cols = datatable.find('table #' + name);
+            $.each(Object.keys(opt.fields), function (i, key) {
+                if (!opt.fields[key].hidden)
+                    return;
+
+                var cols = datatable.find('table #' + key);
                 cols.hide();
             });            
         }
 
-        table.hideSelection = function(hide) {
+        table.hideSelection = function() {
             var column = this.find('table .select');
-            if (hide)
+            if (opt.hideSelection)
                 column.hide();
             else
                 column.show();            
@@ -214,33 +245,33 @@
             '</select>');
         footer.append(pageSizeControl);
         footer.find('select').change(function() {
-            opt.pageSize = parseInt(this.value, 10);
+            opt.data.pageSize = parseInt(this.value, 10);
             datatable.table.getData();
         });
 
         var counter = $('<label></label>');
         counter.update = function () {
-            var start = (opt.page - 1) * opt.pageSize + 1;
-            var end = start + opt.rows.length - 1;
-            counter.html(start + '-' + end + ' of ' + opt.total);
+            var start = (opt.data.page - 1) * opt.data.pageSize + 1;
+            var end = start + opt.data.rows.length - 1;
+            counter.html(start + '-' + end + ' of ' + opt.data.total);
         };
 
         footer.append(counter);
         footer.counter = counter;
 
         var pageControl = $('<div class="pagination"></div>');
-        var left = $('<a id="page-left" class="disabled"><i class="material-icons">chevron_left</i></a>');
+        var left = $('<a id="page-left" class="disabled"><i class="material-icons waves-effect">chevron_left</i></a>');
         left.click(function () {
-            if (opt.page > 1) {
-                opt.page--;
+            if (opt.data.page > 1) {
+                opt.data.page--;
                 datatable.table.getData();
             }
         });
 
-        var right = $('<a id="page-right" class="disabled"><i class="material-icons">chevron_rights</i></a>');
+        var right = $('<a id="page-right" class="disabled"><i class="material-icons waves-effect">chevron_rights</i></a>');
         right.click(function () {
-            if (opt.page < opt.pageCount) {
-                opt.page++;
+            if (opt.data.page < opt.data.pageCount) {
+                opt.data.page++;
                 datatable.table.getData();
             }
         });
@@ -274,10 +305,10 @@
         datatable.header.setCaption(opt.tableHeader);
         datatable.header.hide(opt.hideHeader);
 
-        datatable.table.setHeaders(opt.headers);
+        datatable.table.setHeaders();
+        datatable.table.hideColumns();
 
-        datatable.table.hideColumns(opt.hidden);
-        datatable.table.hideSelection(opt.hideSelection);
+        datatable.table.hideSelection();
 
         datatable.footer.hide(opt.hideFooter);
 
