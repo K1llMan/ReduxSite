@@ -177,7 +177,13 @@
                             // Set save handler
                             var btnSave = dialog.find('#btnSave');
                             btnSave.off('click');
-                            btnSave.click(function() {
+                            btnSave.click(function () {
+                                var value = area.val();
+                                if (value.length > field.size) {
+                                    Materialize.toast('Value is too long', 3000);
+                                    return;
+                                }
+
                                 var rowNum = parseInt(cell.closest('tr').attr('num'), 10);
                                 var rowData = opt.data.rows[rowNum];
                                 rowData[key] = area.val();
@@ -242,9 +248,16 @@
                 return opt.data.rows[parseInt($(row).attr('num'), 10)];
             });
 
+            datatable.table.find('thead input').prop('checked', false);
+            datatable.table.find('thead input').prop('indeterminate', false);
+
+            if (rowsData.length == 0)
+                return;
+
             if (opt.beforeDelete)
                 opt.beforeDelete(rowsData);
 
+            Materialize.toast(rowsData.length + ' rows removed.', 3000);
             datatable.table.getData();
         }
 
