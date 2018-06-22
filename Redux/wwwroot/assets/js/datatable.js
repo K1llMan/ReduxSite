@@ -153,8 +153,10 @@
 
                     var field = opt.fields[key];
 
-                    if (field && field.editable)
-                        cell.click(function () {
+                    if (field && field.editable) {
+                        cell.toggleClass('editable');
+
+                        cell.click(function() {
                             var dialog = datatable.editDialog;
                             // Set position and header
                             dialog.find('label').html(field.header);
@@ -187,6 +189,7 @@
                                 dialog.hide();
                             });
                         });
+                    }
 
                     tableRow.append(cell);
                 });
@@ -335,9 +338,15 @@
 
         var btnSave = $('<a id="btnSave" class="right waves-effect teal-text btn-flat">Save</a>');
         var btnCancel = $('<a class="right waves-effect teal-text btn-flat">Cancel</a>');
+        var btnClear = $('<a class="right waves-effect teal-text btn-flat">Clear</a>');
 
         btnCancel.click(function () {
             dialog.hide();
+        });
+
+        btnClear.click(function () {
+            dialog.find('#editArea').val('');
+            dialog.find('#editArea').blur();
         });
 
         var textArea = $('<div class="input-field col s12">' +
@@ -345,7 +354,7 @@
                 '<label for="editArea"></label>' + 
             '</div>');
 
-        dialog.append(textArea, btnSave, btnCancel);
+        dialog.append(textArea, btnSave, btnCancel, btnClear);
 
         datatable.append(dialog);
         datatable.editDialog = dialog;

@@ -55,6 +55,10 @@
     background-color: #eeeeee;
 }
 
+.datatable td.editable {
+    cursor: pointer;
+}
+
 .datatable .footer {
     display: flex;
     line-height: 1.5em;
