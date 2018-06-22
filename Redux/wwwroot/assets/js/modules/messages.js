@@ -162,30 +162,90 @@ $(function () {
     // Module initialization
     var module = {
         'init': function() {
-            var page = $('<div class="messages"></div>');
+            var page = $('<div></div>');
             
             $.get( "api/messages")
             .done(function( data ) {
-                var table = generateTable(data);
+                // Show table
+                context.readyForDisplay(true);
 
+                var table = $(Templater.useTemplate('table'));
+
+                page.append(table);
+
+                $('.datatable').datatable({
+                    'tableHeader': 'Messages',
+                    'fields': {
+                        'col1': {
+                            'header': 'Column 1',
+                            'tooltip': 'Column 1',
+                            'hidden': false,
+                            'editable': false
+                        },
+                        'col2': {
+                            'header': 'Column 2',
+                            'tooltip': 'Column 2',
+                            'hidden': false,
+                            'editable': false
+                        },
+                        'col3': {
+                            'header': 'Column 3',
+                            'tooltip': 'Column 3',
+                            'hidden': false,
+                            'editable': true,
+                            'size': 10
+                        },
+                        'col4': {
+                            'header': 'Column 4',
+                            'tooltip': 'Column 4',
+                            'hidden': false,
+                            'editable': true,
+                            'size': 1000,
+                            'afterEdit': function (row) {
+                                alert(row);
+                            }
+                        }
+                    },
+                    'hideHeader': false,
+                    'hideFooter': false,
+                    'hideSelection': false,
+                    'getData': function (page, pageSize, sort, sortDir, updateData) {
+                        var response = {
+                            'total': 100,
+                            'page': page,
+                            'pageSize': pageSize,
+                            'pageCount': 10,
+                            'rows': [
+                                { 'col1': 'data41', 'col2': 'data41', 'col3': 'data41', 'col4': 'data51', 'col5': 'ololo', 'col6': '434525', 'col7': 'Column 7', 'col8': 'Column 8', 'col9': 'Column 9', 'col10': 'Column 10 dfgsdg sdg sdg  sdgsdgwegsd segsd gsdg serg sdgwsegsdfg sergsdg segsdfgdLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.' },
+                                { 'col1': 'data1', 'col2': 'data2', 'col3': 'data3' },
+                                { 'col1': 'data41', 'col2': 'data41', 'col3': 'data41' },
+                                { 'col1': 'data11', 'col2': 'data21', 'col3': 'data31' },
+                                { 'col1': 'data41', 'col2': 'data41', 'col3': 'data41' },
+                                { 'col1': 'data12', 'col2': 'data22', 'col3': 'data32' },
+                                { 'col1': 'data41', 'col2': 'data41', 'col3': 'data41' }
+                            ]
+                        }
+
+                        updateData(response);
+                    },
+                    'beforeDelete': function (rows) {
+
+                    }                    
+                });
+
+                /*
+                var table = generateTable(data);
+                */
                 if (context.isLogged()){
                     var deleteButton = $(Templater.useTemplate('delete'));
                          
                     deleteButton.find('#removeSelectedMenu').click(removeSelected);
 
-                    $('.messages').append(getHiddenDiv());
                     $('.messages').append(deleteButton);
                 }
-
-                $('.messages').append(table);
-                $('.messages').append($(Templater.useTemplate('pagination')));
-
-                // Show table
-                context.readyForDisplay(true);
-                $('.tooltipped').tooltip({delay: 50});
             });
                 
-            $('.main-content').append(page);            
+            $('.main-content').append(page);
         }
     }
     

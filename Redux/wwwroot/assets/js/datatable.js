@@ -114,10 +114,10 @@
     function getHeader() {
         var header = $('<div class="header"></div >');
         header.setCaption = function (caption) {
-            this.html(caption);
+            header.html(caption);
         };
         header.hide = function (hide) {
-            this.toggleClass('hide', hide);
+            header.toggleClass('hide', hide);
         }
 
         datatable.append(header);
@@ -203,8 +203,8 @@
                 body.append(tableRow);
             }
 
-            datatable.table.hideColumns();
-            datatable.table.hideSelection();
+            table.hideColumns();
+            table.hideSelection();
         }
 
         table.updateData = function (data) {
@@ -244,12 +244,12 @@
         }
 
         table.removeSelected = function() {
-            var rowsData = table.getSelected().map(function (i, row) {
+            var rowsData = this.getSelected().map(function (i, row) {
                 return opt.data.rows[parseInt($(row).attr('num'), 10)];
             });
 
-            datatable.table.find('thead input').prop('checked', false);
-            datatable.table.find('thead input').prop('indeterminate', false);
+            this.find('thead input').prop('checked', false);
+            this.find('thead input').prop('indeterminate', false);
 
             if (rowsData.length == 0)
                 return;
@@ -258,7 +258,7 @@
                 opt.beforeDelete(rowsData);
 
             Materialize.toast(rowsData.length + ' rows removed.', 3000);
-            datatable.table.getData();
+            this.getData();
         }
 
         table.getData = function() {
@@ -368,10 +368,10 @@
             '</div>');
 
         dialog.append(textArea, btnSave, btnCancel, btnClear);
+        dialog.hide();
 
         datatable.append(dialog);
         datatable.editDialog = dialog;
-        dialog.hide();
     }
 
     function init() {
@@ -385,6 +385,14 @@
 
     $.fn.datatable = function (options) {
         datatable = this;
+
+        // Update options
+        if (options)
+            $.each(Object.keys(options), function(i, key) {
+                if (Object.keys(opt).indexOf(key) != -1)
+                    opt[key] = options[key];
+            });
+
         init();
 
         // Header
@@ -404,7 +412,9 @@
     };
 })(jQuery);
 
+/*
 var dt;
 $(function() {
     dt = $('.datatable').datatable();
 });
+*/
