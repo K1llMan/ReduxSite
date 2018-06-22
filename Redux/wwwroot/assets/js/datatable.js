@@ -22,13 +22,18 @@
                 'header': 'Column 3',
                 'tooltip': 'Column 3',
                 'hidden': false,
-                'editable': false
+                'editable': true,
+                'size': 10
             },
             'col4': {
                 'header': 'Column 4',
                 'tooltip': 'Column 4',
                 'hidden': false,
-                'editable': true
+                'editable': true,
+                'size': 1000,
+                'afterEdit': function(row) {
+                    alert(row);
+                }
             }
         },
         'data': {
@@ -146,6 +151,43 @@
                     cell.attr('id', key);
                     cell.html();
 
+                    var field = opt.fields[key];
+
+                    if (field && field.editable)
+                        cell.click(function () {
+                            var dialog = datatable.editDialog;
+                            // Set position and header
+                            dialog.find('label').html(field.header);
+                            dialog.css(cell.offset());
+
+                            // Init input area
+                            var area = dialog.find('#editArea');
+                            area.val(cell.html());
+                            area.trigger('autoresize');
+
+                            // Init character counter, size must be always set
+                            area.attr('length', field.size);
+                            area.characterCounter();
+
+                            dialog.show();
+                            area.focus();
+
+                            // Set save handler
+                            var btnSave = dialog.find('#btnSave');
+                            btnSave.off('click');
+                            btnSave.click(function() {
+                                var rowNum = parseInt(cell.closest('tr').attr('num'), 10);
+                                var rowData = opt.data.rows[rowNum];
+                                rowData[key] = area.val();
+                                cell.html(rowData[key]);
+
+                                if (field.afterEdit)
+                                    field.afterEdit(rowData);
+
+                                dialog.hide();
+                            });
+                        });
+
                     tableRow.append(cell);
                 });
 
@@ -179,7 +221,8 @@
                 tableRow.show();
 
                 $.each(Object.keys(row), function (i, key) {
-                    tableRow.find('#' + key).html(row[key]);
+                    var cell = tableRow.find('#' + key);
+                    cell.html(row[key]);
                 });
             });
 
@@ -287,14 +330,35 @@
         datatable.footer = footer;
     }
 
+    function getEditDialog() {
+        var dialog = $('<div class="z-depth-1 row" id="editDialog"></div>');
+
+        var btnSave = $('<a id="btnSave" class="right waves-effect teal-text btn-flat">Save</a>');
+        var btnCancel = $('<a class="right waves-effect teal-text btn-flat">Cancel</a>');
+
+        btnCancel.click(function () {
+            dialog.hide();
+        });
+
+        var textArea = $('<div class="input-field col s12">' +
+                '<textarea id="editArea" class="materialize-textarea" length="120"></textarea>' + 
+                '<label for="editArea"></label>' + 
+            '</div>');
+
+        dialog.append(textArea, btnSave, btnCancel);
+
+        datatable.append(dialog);
+        datatable.editDialog = dialog;
+        dialog.hide();
+    }
+
     function init() {
         // Clear html struct
         datatable.html('');
         getHeader();
         getTable();
         getFooter();
-
-        datatable.addClass('z-depth-1');
+        getEditDialog();
     }
 
     $.fn.datatable = function (options) {
