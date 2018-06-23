@@ -41,6 +41,7 @@ namespace Redux
             return db.Query(
                 "select *" +
                 " from redux_messages" +
+                " order by ID" +
                 $" limit {count} offset {(page - 1) * count}");
         }
 
@@ -52,7 +53,7 @@ namespace Redux
             return db.Query(
                 "select *" +
                 " from redux_messages" +
-                $" where limit \"SteamID\" in ({string.Join(", ", ids)}) and not Reply is null and not IsPlayerRead");
+                $" where limit SteamID in ({string.Join(", ", ids)}) and not Reply is null and not IsPlayerRead");
         }
 
         /// <summary>
@@ -61,7 +62,7 @@ namespace Redux
         public void PostMessage(JObject message)
         {
             db.Execute(
-                "insert into redux_messages (\"SteamID\", \"Nickname\", \"Comment\", \"TimeStamp\")" +
+                "insert into redux_messages (SteamID, Nickname, Comment, TimeStamp)" +
                 " values (@SteamID, @Nickname, @Message, @TimeStamp)", message.ToNetObject());
         }
 
@@ -73,12 +74,12 @@ namespace Redux
             string query = 
                 "update redux_messages" +
                 " set {0} = {1}" +
-                " where \"ID\" = {2}";
+                " where ID = {2}";
 
             if (message.ContainsKey("Reply"))
-                query = string.Format(query, "\"Reply\"", $"'{message["Reply"].ToString()}', \"IsPlayerRead\" = false", message["ID"]);
+                query = string.Format(query, "Reply", $"'{message["Reply"].ToString()}', IsPlayerRead = false", message["ID"]);
             else if (!message["IsPlayerRead"].IsNullOrEmpty())
-                query = string.Format(query, "\"IsPlayerRead\"", "true", message["ID"]);
+                query = string.Format(query, "IsPlayerRead", "true", message["ID"]);
             else 
                 return;
 
@@ -91,7 +92,7 @@ namespace Redux
         public void DeleteMessages(JObject message)
         {
             string ids = string.Join(", ", message["ids"].Values());
-            db.Execute($"delete from redux_messages where \"ID\" in ({ids})");
+            db.Execute($"delete from redux_messages where ID in ({ids})");
         }
 
         public ReduxMessages(Database database)

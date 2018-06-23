@@ -20,24 +20,25 @@ $(function () {
                 dt = $('.datatable').datatable({
                     'tableHeader': 'Messages',
                     'fields': {
-                        'Comment': {
+                        'comment': {
                             'header': 'Message',
                             'tooltip': 'Message',
                             'hidden': false,
                             'editable': false
                         },
-                        'Nickname': {
+                        'nickname': {
                             'header': 'Nickname',
                             'tooltip': 'Nickname',
                             'hidden': false,
                             'editable': false,
-                            'init': function(cell, data) {
+                            'init': function (cell, data) {
+                                cell.html(data.nickname);
                                 cell.click(function() {
-                                    openSteamProfile(data.SteamID);
+                                    openSteamProfile(data.steamid);
                                 });
                             }
                         },
-                        'Reply': {
+                        'reply': {
                             'header': 'Reply',
                             'tooltip': 'Reply',
                             'hidden': false,
@@ -49,8 +50,8 @@ $(function () {
                                     type: 'PUT',
                                     contentType: "application/json; charset=utf-8",
                                     data: JSON.stringify({
-                                        ID: row.ID,
-                                        Reply: row.Reply
+                                        ID: row.id,
+                                        Reply: row.reply
                                     }),
                                     success: function (response) {
                                         //...
@@ -79,7 +80,7 @@ $(function () {
                             type: 'DELETE',
                             data: JSON.stringify({
                                 ids: rows.map(function(el, i) {
-                                    return el.ID;
+                                    return el.id;
                                 })
                             }),
                             success: function (data) {

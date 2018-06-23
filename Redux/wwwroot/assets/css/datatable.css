@@ -27,13 +27,16 @@
 }
 
 .datatable table {
-    white-space: nowrap;
+    //white-space: nowrap;
 }
 
-.datatable td, th {
+.datatable td:not(.select), th:not(.select) {
     padding: 15px 20px 15px 60px;
     height: 48px;
     font-weight: bold;
+
+    max-width: 500px;
+    min-width: 200px;
 }
 
 .datatable td.select, th.select {
