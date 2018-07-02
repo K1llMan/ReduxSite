@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  redux:
+    image: ${DOCKER_REGISTRY}redux
+    build:
+      context: .
+      dockerfile: Redux/Dockerfile

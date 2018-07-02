@@ -17,6 +17,10 @@ namespace Redux
 
         public ReduxStats Stats { get; }
 
+        public ReduxPlayers Players { get; }
+
+        public ReduxMatch Matches { get; }
+
         /// <summary>
         /// JWT (JSON Web Token) для авторизации пользователей
         /// </summary>
@@ -32,6 +36,8 @@ namespace Redux
             Settings = new ReduxSettings(Path.Combine(baseDir, "ReduxSettings.json"));
             Messages = new ReduxMessages(Settings.DB);
             Stats = new ReduxStats(Settings.DB);
+            Players = new ReduxPlayers(Settings.DB);
+            Matches = new ReduxMatch(Settings.DB);
 
             if (Settings.JWTKey.Length < 16)
                 Logger.WriteToTrace("Для корректной работы JWT ключ должен быть не менее 16 символов.", TraceMessageKind.Error);
@@ -41,7 +47,7 @@ namespace Redux
                 dynamic row = Settings.DB.Query(
                     "select *" +
                     " from redux_users" +
-                    $" where \"Username\" = '{d["user"]}'").FirstOrDefault();
+                    $" where Username = '{d["user"]}'").FirstOrDefault();
 
                 if (row == null)
                     return null;
