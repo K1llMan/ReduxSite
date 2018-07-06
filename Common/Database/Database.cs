@@ -15,12 +15,31 @@ namespace Common
     {
         #region Поля
 
+        private string connectionStr;
         private IDbConnection connection;
         private IDbTransaction transaction;
 
         #endregion Поля
 
         #region Свойства
+
+        public DBTable this[string tableName]
+        {
+            get
+            {
+                dynamic result = Query(
+                    "select exists (" +
+                    " select 1" +
+                    " from information_schema.tables" +
+                    $" where table_name = '{tableName}')")?.FirstOrDefault();
+
+                // Если не существует, то создаём новую
+                if (result == null || !result.exists)
+                    return null;
+
+                return new DBTable(this, tableName);
+            }
+        }
 
         /// <summary>
         /// Тип базы
@@ -84,45 +103,43 @@ namespace Common
 
         #region Основные функции
 
+        public Database(string connection)
+        {
+            connectionStr = connection;
+        }
+
         /// <summary>
         /// Соединения с базой (формат [dbType]://[user]:[password]@[serverName[:portNumber][/instanceName]][;property=value[;property=value]])
         /// postgresql://sysdba:masterkey@localhost:5432/db
         /// </summary>
-        public void Connect(string connStr)
+        public void Connect()
         {
-            try
-            {
-                connection?.Close();
-                connection?.Dispose();
+            connection?.Close();
+            connection?.Dispose();
 
-                if (string.IsNullOrEmpty(connStr))
+            if (string.IsNullOrEmpty(connectionStr))
+                return;
+
+            string connectionString = GetConnectionString(connectionStr);
+
+            switch (DatabaseType)
+            {
+                case DBType.PostgreSql:
+                    connection = new NpgsqlConnection(connectionString);
+                    break;
+
+                case DBType.SqlServer:
+                    connection = new SqlConnection(connectionString);
+                    break;
+
+                case DBType.Oracle:
+                    connection = new OracleConnection(connectionString);
+                    break;
+                default:
                     return;
-
-                string connectionString = GetConnectionString(connStr);
-
-                switch (DatabaseType)
-                {
-                    case DBType.PostgreSql:
-                        connection = new NpgsqlConnection(connectionString);
-                        break;
-
-                    case DBType.SqlServer:
-                        connection = new SqlConnection(connectionString);
-                        break;
-
-                    case DBType.Oracle:
-                        connection = new OracleConnection(connectionString);
-                        break;
-                    default:
-                        return;
-                }
-
-                connection.Open();
             }
-            catch (Exception ex)
-            {
-                Logger.WriteToTrace($"Ошибка при подключении к базе: {ex}", TraceMessageKind.Error);
-            }
+
+            connection.Open();
         }
 
         /// <summary>
@@ -149,7 +166,7 @@ namespace Common
         /// </summary>
         public int Execute(string query, object param = null)
         {
-            if (connection.State == ConnectionState.Closed)
+            if (connection?.State == ConnectionState.Closed)
                 return -1;
 
             return connection.Execute(query, param);
@@ -160,7 +177,7 @@ namespace Common
         /// </summary>
         public object ExecuteScalar(string query, object param = null)
         {
-            return connection.State == ConnectionState.Closed 
+            return connection?.State == ConnectionState.Closed 
                 ? null 
                 : connection?.ExecuteScalar(query, param);
         }
@@ -170,7 +187,7 @@ namespace Common
         /// </summary>
         public IEnumerable<dynamic> Query(string query, object param = null)
         {
-            return connection.State == ConnectionState.Closed 
+            return connection?.State == ConnectionState.Closed 
                 ? null 
                 : connection?.Query<dynamic>(query, param);
         }

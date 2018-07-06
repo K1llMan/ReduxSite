@@ -34,6 +34,16 @@ namespace Redux
         {
             string baseDir = AppDomain.CurrentDomain.BaseDirectory;
             Settings = new ReduxSettings(Path.Combine(baseDir, "ReduxSettings.json"));
+            // Соединение с базой
+            try
+            {
+                Settings.DB.Connect();
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteToTrace($"Ошибка при подключении к базе: {ex}", TraceMessageKind.Error);
+            }
+
             Messages = new ReduxMessages(Settings.DB);
             Stats = new ReduxStats(Settings.DB);
             Players = new ReduxPlayers(Settings.DB);

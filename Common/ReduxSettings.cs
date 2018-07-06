@@ -23,9 +23,7 @@ namespace Common
         {
             JObject data = JsonCommon.Load(settings);
 
-            DB = new Database();
-            DB.Connect(data["Database"].ToString());
-
+            DB = new Database(data["Database"].ToString());
             JWTKey = data["JWTKey"].ToString();
         }
 
