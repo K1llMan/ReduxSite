@@ -164,32 +164,32 @@ namespace Common
         /// <summary>
         /// Параметризированный запрос, возвращающий количество строк
         /// </summary>
-        public int Execute(string query, object param = null)
+        public object Execute(string query, object param = null, CommandType? type = null)
         {
             if (connection?.State == ConnectionState.Closed)
                 return -1;
-
-            return connection.Execute(query, param);
+            
+            return connection.Execute(query, param, commandType: type);
         }
 
         /// <summary>
         /// Параметризированный запрос, возвращающий значение
         /// </summary>
-        public object ExecuteScalar(string query, object param = null)
+        public object ExecuteScalar(string query, object param = null, CommandType? type = null)
         {
             return connection?.State == ConnectionState.Closed 
                 ? null 
-                : connection?.ExecuteScalar(query, param);
+                : connection?.ExecuteScalar(query, param, commandType: type);
         }
 
         /// <summary>
         /// Запрос, возвращающий результат
         /// </summary>
-        public IEnumerable<dynamic> Query(string query, object param = null)
+        public IEnumerable<dynamic> Query(string query, object param = null, CommandType? type = null)
         {
             return connection?.State == ConnectionState.Closed 
                 ? null 
-                : connection?.Query<dynamic>(query, param);
+                : connection?.Query<dynamic>(query, param, commandType: type);
         }
 
         /// <summary>
