@@ -193,7 +193,7 @@ namespace Redux
             {
                 string query = 
                     "select * from redux_players" + 
-                    $" where steamid = {data["steamId"]}";
+                    $" where steamid = '{data["steamId"]}'";
                 dynamic playerData = (IDictionary<string, object>)db.Query(query).Single();
 
                 string abilities = UpdateAbilities(playerData.abilities, data["abilities"]);
@@ -203,7 +203,7 @@ namespace Redux
                 query =
                     "update redux_players " +
                     $" set abilities = '{abilities}', gamemodes = '{gamemodes}', heroes = '{heroes}'" +
-                    $" where steamid = {data["steamId"]}";
+                    $" where steamid = '{data["steamId"]}'";
 
                 db.Execute(query);
             }
@@ -218,6 +218,35 @@ namespace Redux
         #endregion Вспомогательные функции
 
         #region Основные функции
+
+        public int GetMatchesCount(string gamemode)
+        {
+            string query =
+                "select count(*)" +
+                " from redux_matches" +
+                (string.IsNullOrEmpty(gamemode)
+                    ? string.Empty
+                    : $" where gamemode in ({ string.Join(",", gamemode.Split(',').Select(s => "'" + s + "'")) })");
+
+            var result = db.Query(query);
+
+            return result == null ? 0 : (int)result.Single().count;
+        }
+
+        /// <summary>
+        /// Постраничное формирование списка сообщений
+        /// </summary>
+        public dynamic GetMatches(int page, int count, string gamemode)
+        {
+            return db.Query(
+                "select matchid, duration, gamemode, timestamp" +
+                " from redux_matches" +
+                (string.IsNullOrEmpty(gamemode)
+                    ? string.Empty
+                    : $" where gamemode in ({ string.Join(",", gamemode.Split(',').Select(s => "'" + s + "'")) })") + 
+                " order by matchid desc" +
+                $" limit {count} offset {(page - 1) * count}");
+        }
 
         public void Save(JToken matchInfo)
         {
@@ -242,7 +271,7 @@ namespace Redux
                 foreach (JToken team in matchInfo.SelectTokens("teams[*]"))
                 {
                     bool isWinner = Convert.ToBoolean(team["isWinner"]);
-                    foreach (JToken player in team.SelectTokens("players[*]"))
+                    foreach (JToken player in team.SelectTokens("players[?(@.isAbandoned != true)]"))
                         SavePlayer(player, gamemode, isWinner);
                 }
 

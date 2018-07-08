@@ -3,7 +3,7 @@ $(function () {
 
     // Handlers
     function openSteamProfile( steamID ) {
-        window.open('http://steamcommunity.com/profiles/[U:1:' + steamID + ']', '_blank');
+        window.open('https://steamcommunity.com/profiles/' + steamID, '_blank');
     };
 
     // Module initialization
@@ -33,6 +33,7 @@ $(function () {
                             'editable': false,
                             'init': function (cell, data) {
                                 cell.html(data.nickname);
+                                cell.addClass('clickable');
                                 cell.click(function() {
                                     openSteamProfile(data.steamid);
                                 });
@@ -89,9 +90,6 @@ $(function () {
                     }                    
                 });
 
-                /*
-                var table = generateTable(data);
-                */
                 if (context.isLogged()){
                     var deleteButton = $(Templater.useTemplate('delete'));
                          

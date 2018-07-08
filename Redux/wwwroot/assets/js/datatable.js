@@ -255,11 +255,8 @@
                 tableRow.css({ 'borderBottom': '' });
                 tableRow.show();
 
-                $.each(Object.keys(row), function (i, key) {
+                $.each(Object.keys(opt.fields), function (i, key) {
                     var field = opt.fields[key];
-                    if (!field)
-                        return;
-
                     var cell = tableRow.find('#' + key);
                     if (field.init && !field.editable)
                         opt.fields[key].init(cell, row);

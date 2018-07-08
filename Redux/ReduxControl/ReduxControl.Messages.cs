@@ -41,7 +41,7 @@ namespace Redux
             return db.Query(
                 "select *" +
                 " from redux_messages" +
-                " order by ID" +
+                " order by ID desc" +
                 $" limit {count} offset {(page - 1) * count}");
         }
 
@@ -53,7 +53,7 @@ namespace Redux
             return db.Query(
                 "select *" +
                 " from redux_messages" +
-                $" where limit SteamID in ({string.Join(", ", ids)}) and not Reply is null and not IsPlayerRead");
+                $" where limit SteamID in ({string.Join(", ", ids.Select(s => "'" + s + "'"))}) and not Reply is null and not IsPlayerRead");
         }
 
         /// <summary>

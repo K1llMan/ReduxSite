@@ -21,6 +21,12 @@ namespace Redux.Controllers
                         { "template", "messages.tmp" }
                     }
                 },
+                { "#mathes", new Dictionary<string, string> {
+                        { "displayName", "Matches" },
+                        { "script", "matches.js" },
+                        { "template", "matches.tmp" }
+                    }
+                },
                 { "#abilities", new Dictionary<string, string> {
                         { "displayName", "Abilities" },
                         { "script", "abilities.js" },

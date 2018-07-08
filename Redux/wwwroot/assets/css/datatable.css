@@ -58,7 +58,7 @@
     background-color: #eeeeee;
 }
 
-.datatable td.editable {
+.datatable td.editable, td.clickable {
     cursor: pointer;
 }
 
