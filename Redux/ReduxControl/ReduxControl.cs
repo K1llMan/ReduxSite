@@ -11,6 +11,8 @@ namespace Redux
     {
         #region Свойства
 
+        public SteamAPI Steam { get; set; }
+
         public ReduxSettings Settings { get; set; }
 
         public ReduxMessages Messages { get; }
@@ -44,6 +46,7 @@ namespace Redux
                 Logger.WriteToTrace($"Ошибка при подключении к базе: {ex}", TraceMessageKind.Error);
             }
 
+            Steam = new SteamAPI(Settings.SteamAPIKey);
             Messages = new ReduxMessages(Settings.DB);
             Stats = new ReduxStats(Settings.DB);
             Players = new ReduxPlayers(Settings.DB);
@@ -62,12 +65,12 @@ namespace Redux
                 if (row == null)
                     return null;
 
-                if (row.Password.ToString() != d["password"])
+                if (row.password.ToString() != d["password"])
                     return null;
 
                 return new Claim[] {
-                    new Claim(ClaimTypes.Name, row.Username.ToString()),
-                    new Claim(ClaimTypes.Role, row.Role.ToString())
+                    new Claim(ClaimTypes.Name, row.username.ToString()),
+                    new Claim(ClaimTypes.Role, row.role.ToString())
                 };
             };
             

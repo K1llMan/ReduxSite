@@ -234,7 +234,7 @@ namespace Redux
         }
 
         /// <summary>
-        /// Постраничное формирование списка сообщений
+        /// Постраничное формирование списка матчей
         /// </summary>
         public dynamic GetMatches(int page, int count, string gamemode)
         {
@@ -246,6 +246,14 @@ namespace Redux
                     : $" where gamemode in ({ string.Join(",", gamemode.Split(',').Select(s => "'" + s + "'")) })") + 
                 " order by matchid desc" +
                 $" limit {count} offset {(page - 1) * count}");
+        }
+
+        public dynamic GetMatch(decimal matchID)
+        {
+            return db.Query(
+                "select *" +
+                " from redux_matches" +
+                $" where matchid = {matchID}").Single();
         }
 
         public void Save(JToken matchInfo)

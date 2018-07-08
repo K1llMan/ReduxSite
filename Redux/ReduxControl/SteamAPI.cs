@@ -21,13 +21,15 @@ namespace Redux
 
         #region Вспомогательные функции
 
-        private string GetResponse(string url, string method)
+        private string GetResponse(string url, string method = "GET")
         {
             try
             {
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                 request.Method = method;
-                return new StreamReader(request.GetResponse().GetResponseStream()).ReadToEnd();
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+                return new StreamReader(response.GetResponseStream()).ReadToEnd();
             }
             catch (Exception ex)
             {
@@ -42,8 +44,11 @@ namespace Redux
 
         public JToken GetPlayersData(params string[] ids)
         {
-            string url = $"api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={key}&steamids={string.Join(",", ids)}";
-            return JObject.Parse(GetResponse(url, "GET"));
+            if (string.IsNullOrEmpty(key))
+                return null;
+
+            string url = $"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={key}&steamids={string.Join(",", ids)}";
+            return JObject.Parse(GetResponse(url));
         }
 
         public SteamAPI(string apiKey)

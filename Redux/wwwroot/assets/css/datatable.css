@@ -6,8 +6,11 @@
     border-radius: 5px;
 }
 
-.datatable .header,
-.datatable .footer {
+.datatable a {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.datatable .header, .datatable .footer {
     padding: 20px 0;
     height: 64px;
 }

@@ -17,7 +17,7 @@ namespace Redux.Controllers
     {
         // GET api/matches
         [HttpGet]
-        public object GetMessages(int page = 1, int pageSize = 50, string gamemode = "")
+        public object GetMatches(int page = 1, int pageSize = 50, string gamemode = "")
         {
             int total = Program.Control.Matches.GetMatchesCount(gamemode);
             return new Dictionary<string, object> {
@@ -29,9 +29,23 @@ namespace Redux.Controllers
             };
         }
 
+        // GET api/matches/{matchID}
+        [HttpGet("{matchID}")]
+        public object GetMatch(decimal matchID)
+        {
+            dynamic row = Program.Control.Matches.GetMatch(matchID);
+            if (row == null)
+                return row;
+
+            row.teams = JArray.Parse(row.teams);
+            row.gameoptions = JObject.Parse(row.gameoptions);
+
+            return row;
+        }
+
         // POST api/matches
         [HttpPost]
-        //[Authorize(Roles = "Game")]
+        [Authorize(Roles = "Game")]
         public void SaveMatchInfo()
         {
             try

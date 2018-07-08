@@ -21,12 +21,22 @@ namespace Redux.Controllers
         public object GetMessages(int page = 1, int pageSize = 50)
         {
             int total = (int) Program.Control.Messages.Count;
+
+            dynamic rows = Program.Control.Messages.GetMessages(page, pageSize);
+            List<string> ids = new List<string>();
+            foreach (dynamic row in rows)
+                ids.Add(row.steamid);
+
+            JToken playersData = Program.Control.Steam.GetPlayersData(ids.Distinct().ToArray());
+            foreach (dynamic row in rows)
+                row.nickname = playersData.SelectToken($"$..players[?(@.steamid == '{row.steamid}')]")["personaname"].ToString();
+
             return new Dictionary<string, object> {
                 { "total", total},
                 { "page", page },
                 { "pageCount", total / pageSize + 1 },
                 { "pageSize", pageSize },
-                { "rows", Program.Control.Messages.GetMessages(page, pageSize) }
+                { "rows", rows }
             };
         }
 

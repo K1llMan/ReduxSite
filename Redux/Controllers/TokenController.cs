@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Redux.Controllers
 {
     [Produces("application/json")]
-    [Route("api/token")]
+    [Route("api/[controller]")]
     public class TokenController : Controller
     {
         [HttpPost]

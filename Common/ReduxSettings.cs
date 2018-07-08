@@ -15,6 +15,8 @@ namespace Common
 
         public string JWTKey { get; }
 
+        public string SteamAPIKey { get; }
+
         #endregion Свойства
 
         #region Основные функции
@@ -25,6 +27,7 @@ namespace Common
 
             DB = new Database(data["Database"].ToString());
             JWTKey = data["JWTKey"].ToString();
+            SteamAPIKey = data["SteamAPIKey"].ToString();
         }
 
         #endregion Основные функции
