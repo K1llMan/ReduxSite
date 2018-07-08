@@ -18,7 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="ReduxSettings.json">
+    <Content Update="ReduxSettings1.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="ReduxSettingsExample.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

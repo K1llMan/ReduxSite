@@ -62,8 +62,8 @@ namespace Redux
         public void PostMessage(JObject message)
         {
             db.Execute(
-                "insert into redux_messages (SteamID, Nickname, Comment, TimeStamp)" +
-                " values (@SteamID, @Nickname, @Message, @TimeStamp)", message.ToNetObject());
+                "insert into redux_messages (SteamID, Comment, TimeStamp)" +
+                " values (@SteamID, @Message, @TimeStamp)", message.ToNetObject());
         }
 
         /// <summary>
