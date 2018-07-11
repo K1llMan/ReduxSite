@@ -18,7 +18,7 @@ namespace Redux.Controllers
         [HttpGet("fields")]
         public object GetField(string steamID, string fields)
         {
-            return Program.Control.Players.GetFields(steamID, fields.Split(','));
+            return Program.Control.Players.GetFields(steamID, fields?.Split(','));
         }
 
         // POST api/players/{field}

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 using Common;
 
@@ -19,15 +20,31 @@ namespace Redux
         /// <summary>
         /// Возвращает одно или несколько полей из списка
         /// </summary>
-        public JToken GetFields(string steamID, params string[] fields)
+        public object GetFields(string steamID, params string[] fields)
         {
             string[] avaliableFields = { "abilities", "gamemodes", "heroes", "settings", "bans", "builds" };
-            string[] existFields = avaliableFields.Intersect(fields).ToArray();
+
+            string[] existFields = fields == null 
+                ? new string[] { "*" }
+                : avaliableFields.Intersect(fields).ToArray();
 
             if (existFields.Length == 0)
                 return null;
 
-            return null;
+            string query =
+                $"select {string.Join(", ", existFields)}" +
+                " from redux_players" +
+                $" where steamid = '{steamID}'";
+
+            var row = (IDictionary<string, object>)db.Query(query).SingleOrDefault();
+            if (row == null)
+                return null;
+
+            foreach (string field in row.Keys)
+                // Поля, конвертируемые в json
+                if (avaliableFields.Contains(field))
+                    row[field] = JObject.Parse(row[field] == null ? "{}" : row[field].ToString());
+            return row;
         }
 
         public void SetField(string steamID, string field, JToken data)
