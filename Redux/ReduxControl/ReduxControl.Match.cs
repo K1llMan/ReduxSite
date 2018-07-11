@@ -248,6 +248,9 @@ namespace Redux
                 $" limit {count} offset {(page - 1) * count}");
         }
 
+        /// <summary>
+        /// Полная информация о матче
+        /// </summary>
         public dynamic GetMatch(decimal matchID)
         {
             return db.Query(
