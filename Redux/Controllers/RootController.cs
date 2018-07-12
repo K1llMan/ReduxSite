@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 
 using Common;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace Redux.Controllers
 {
-    [Produces("application/json")]
     [Route("api")]
     public class RootController : Controller
     {
@@ -68,25 +69,34 @@ namespace Redux.Controllers
             Assembly assembly = Assembly.GetExecutingAssembly();
             foreach (Type type in assembly.GetTypes().Where(t => t.Name.IsMatch("Controller")))
             {
-                foreach (Attribute attr in type.GetCustomAttributes())
-                {
-                    if (attr is RouteAttribute)
-                        apiList.Add(((RouteAttribute)attr).Template.Replace("[controller]", type.Name.Replace("Controller", string.Empty).ToLower()));
-                    if (attr is HttpMethodAttribute)
-                        apiList.Add(((HttpMethodAttribute)attr).Template);
-                }
+                RouteAttribute route = (RouteAttribute)type.GetCustomAttributes(typeof(RouteAttribute)).FirstOrDefault();
+                string mainRoute = route.Template.Replace("[controller]", type.Name.Replace("Controller", string.Empty).ToLower());
 
                 foreach (MethodInfo method in type.GetMethods())
                 {
-                    foreach (Attribute attr in method.GetCustomAttributes())
+                    foreach (HttpMethodAttribute attr in method.GetCustomAttributes(typeof(HttpMethodAttribute)))
                     {
-                        if (attr is HttpMethodAttribute)
-                            apiList.Add(((HttpMethodAttribute)attr).Template);
+                        AuthorizeAttribute authAttr = (AuthorizeAttribute)method.GetCustomAttributes(typeof(AuthorizeAttribute)).FirstOrDefault();
+
+                        List<string> methodDesc = new List<string>{
+                            $"{string.Join(", ", attr.HttpMethods)} {string.Join("/", new string[] { mainRoute, attr.Template }.Where(s => !string.IsNullOrEmpty(s)))}" +
+                            $"{ (authAttr != null ? $" Auth: {authAttr.Roles} {authAttr.Policy}" : string.Empty) } \n"
+                        };
+                        
+                        foreach (ParameterInfo parameter in method.GetParameters())
+                            methodDesc.Add($"\t{parameter.Name}: {parameter.ParameterType.Name} Default: {parameter.RawDefaultValue}\n");
+
+                        apiList.Add(string.Join("", methodDesc));
                     }
                 }
             }
 
-            return null;
+            return new ContentResult
+            {
+                ContentType = "text/html",
+                StatusCode = (int)HttpStatusCode.OK,
+                Content = string.Join("", apiList)
+            };
         }
     }
 }
