@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 
+using Newtonsoft.Json.Linq;
+
 namespace Redux.Controllers
 {
     [Route("api")]
@@ -65,38 +67,49 @@ namespace Redux.Controllers
         [HttpGet("methods")]
         public object GetMethods()
         {
-            List<string> apiList = new List<string>();
+            JObject apiList = new JObject();
             Assembly assembly = Assembly.GetExecutingAssembly();
             foreach (Type type in assembly.GetTypes().Where(t => t.Name.IsMatch("Controller")))
             {
+                JArray controllerMethods = new JArray();
+
                 RouteAttribute route = (RouteAttribute)type.GetCustomAttributes(typeof(RouteAttribute)).FirstOrDefault();
-                string mainRoute = route.Template.Replace("[controller]", type.Name.Replace("Controller", string.Empty).ToLower());
+                string controllerName = type.Name.Replace("Controller", string.Empty);
+                string mainRoute = route.Template.Replace("[controller]", controllerName.ToLower());
 
                 foreach (MethodInfo method in type.GetMethods())
-                {
                     foreach (HttpMethodAttribute attr in method.GetCustomAttributes(typeof(HttpMethodAttribute)))
                     {
-                        AuthorizeAttribute authAttr = (AuthorizeAttribute)method.GetCustomAttributes(typeof(AuthorizeAttribute)).FirstOrDefault();
-
-                        List<string> methodDesc = new List<string>{
-                            $"{string.Join(", ", attr.HttpMethods)} {string.Join("/", new string[] { mainRoute, attr.Template }.Where(s => !string.IsNullOrEmpty(s)))}" +
-                            $"{ (authAttr != null ? $" Auth: {authAttr.Roles} {authAttr.Policy}" : string.Empty) } \n"
+                        JObject apiMethod = new JObject {
+                            { "route", $"{string.Join(", ", attr.HttpMethods)} {string.Join("/", new string[] { mainRoute, attr.Template }.Where(s => !string.IsNullOrEmpty(s)))}" }
                         };
-                        
-                        foreach (ParameterInfo parameter in method.GetParameters())
-                            methodDesc.Add($"\t{parameter.Name}: {parameter.ParameterType.Name} Default: {parameter.RawDefaultValue}\n");
 
-                        apiList.Add(string.Join("", methodDesc));
+                        AuthorizeAttribute authAttr = (AuthorizeAttribute)method.GetCustomAttributes(typeof(AuthorizeAttribute)).FirstOrDefault();
+                        if (authAttr != null)
+                            apiMethod.Add("auth", new JObject{
+                                { "roles", authAttr.Roles },
+                                { "policy", authAttr.Policy }
+                            } );
+
+                        ParameterInfo[] parameters = method.GetParameters();
+                        if (parameters.Length > 0)
+                        {
+                            JArray methodParams = new JArray();
+                            foreach (ParameterInfo parameter in method.GetParameters())
+                                methodParams.Add(new JObject { 
+                                    { "name", parameter.Name },
+                                    { "type", parameter.ParameterType.Name },
+                                    { "default", parameter.RawDefaultValue.ToString() }
+                                });
+                            apiMethod.Add("params", methodParams);
+                        }
+                        controllerMethods.Add(apiMethod);
                     }
-                }
+
+                apiList.Add(controllerName, controllerMethods);
             }
 
-            return new ContentResult
-            {
-                ContentType = "text/html",
-                StatusCode = (int)HttpStatusCode.OK,
-                Content = string.Join("", apiList)
-            };
+            return apiList;
         }
     }
 }
