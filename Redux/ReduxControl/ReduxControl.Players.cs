@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 
@@ -120,7 +119,7 @@ namespace Redux
             db.Execute(
                 "update redux_players" +
                 " set roles = @roles" +
-                $" where steamid = @steamid", rows);
+                " where steamid = @steamid", rows);
         }
 
         public ReduxPlayers(Database database)
