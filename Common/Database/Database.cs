@@ -169,7 +169,7 @@ namespace Common
             if (connection?.State == ConnectionState.Closed)
                 return -1;
             
-            return connection.Execute(query, param, commandType: type);
+            return connection.Execute(query, param, commandType: type, transaction: transaction);
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace Common
         {
             return connection?.State == ConnectionState.Closed 
                 ? null 
-                : connection?.ExecuteScalar(query, param, commandType: type);
+                : connection?.ExecuteScalar(query, param, commandType: type, transaction: transaction);
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace Common
         {
             return connection?.State == ConnectionState.Closed 
                 ? null 
-                : connection?.Query<dynamic>(query, param, commandType: type);
+                : connection?.Query<dynamic>(query, param, commandType: type, transaction: transaction);
         }
 
         /// <summary>

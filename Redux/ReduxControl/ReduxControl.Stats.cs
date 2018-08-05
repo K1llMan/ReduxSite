@@ -17,6 +17,16 @@ namespace Redux
 
         #region Основные функции
 
+        public dynamic GetAbilities()
+        {
+            return null;
+        }
+
+        public dynamic GetHeroes()
+        {
+            return null;
+        }
+
         public ReduxStats(Database database)
         {
             db = database;

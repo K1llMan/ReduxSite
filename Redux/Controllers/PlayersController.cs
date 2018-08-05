@@ -14,42 +14,61 @@ namespace Redux.Controllers
     [Route("api/[controller]")]
     public class PlayersController : Controller
     {
-        // GET api/players/fields
-        [HttpGet("fields")]
-        public object GetField(string steamID, string fields)
+        // GET api/players/{steamId}/fields
+        [HttpGet("{steamId}/fields")]
+        public object GetField(string steamId, string fields)
         {
-            return Program.Control.Players.GetFields(steamID, fields?.Split(','));
+            return Program.Control.Players.GetFields(steamId, fields?.Split(','));
         }
 
-        // POST api/players/{field}
-        [HttpPost("{field}")]
+        // POST api/players/{steamId}/{field}
+        [HttpPost("{steamId}/{field}")]
         [Authorize(Roles = "Game")]
-        public void SetField(string steamID, string field)
+        public void SetField(string steamId, string field)
         {
             try
             {
                 StreamReader reader = new StreamReader(Request.Body);
                 JObject data = JObject.Parse(reader.ReadToEnd());
 
-                Program.Control.Players.SetField(steamID, field, data);
+                Program.Control.Players.SetField(steamId, field, data);
             }
             catch (Exception ex)
             {
-                Logger.WriteToTrace($"Ошибка при сохранении поля {field} игрока {steamID}: {ex}", TraceMessageKind.Error);
+                Logger.WriteToTrace($"Ошибка при сохранении поля {field} игрока {steamId}: {ex}", TraceMessageKind.Error);
             }
         }
 
         // GET api/players
         [HttpGet]
-        public object GetPlayersInfo(string ids)
+        public object GetPlayersInfo(string ids, string fields)
         {
             try
             {
-                return Program.Control.Players.GetPlayersInfo(ids.Split(','));
+                return Program.Control.Players.GetPlayersInfo(ids?.Split(','), fields?.Split(','));
             }
             catch (Exception ex)
             {
                 Logger.WriteToTrace($"Ошибка при получении данных игроков {ids.Split(',')}: {ex}", TraceMessageKind.Error);
+            }
+
+            return null;
+        }
+
+        // POST api/players/roles
+        [HttpPost("roles")]
+        public object SetRoles()
+        {
+            try
+            {
+                StreamReader reader = new StreamReader(Request.Body);
+                JObject data = JObject.Parse(reader.ReadToEnd());
+
+                Program.Control.Players.SetRoles(data);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteToTrace($"Ошибка при обновлении ролей: {ex}", TraceMessageKind.Error);
             }
 
             return null;
