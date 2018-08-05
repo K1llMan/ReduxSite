@@ -1,91 +1,121 @@
-{  
-   "matchId":3992941573,
-   "gamemode":"versus",
-   "map":"redux_default",
-   "duration":1200,
-   "teams":[  
-      {  
-         "id":2,
-         "isWinner":false,
-         "score":0,
-         "players":[  
-            {  
-               "steamId":"76561198070058334",
-               "isAbandoned":true,
-               "hero":"npc_dota_hero_disruptor",
-               "kills":0,
-               "deaths":0,
-               "assists":0,
-               "lastHits":0,
-               "denies":0,
-               "abilities":{  
-                  "picks":[  
-                     "ogre_magi_bloodlust_op",
-                     "obsidian_destroyer_astral_imprisonment_redux",
-                     "spell_lab_souls_damage",
-                     "forest_troll_high",
-                     "beastmaster_axes",
-                     "tiny_toss"
-                  ],
-                  "bans":[  
-                     "tiny_toss"
-                  ]
-               },
-               "items":[  
-                  {  
-                     "name":"item_tpscroll",
-                     "charges":2
-                  },
-                  {  
-                     "name":"item_devDagger",
-                     "charges":0
-                  }
-               ]
+// Информация по матчу
+{
+  "matchId": 3992941573,
+  "gamemode": "versus",
+  "map": "redux_default",
+  "duration": 1200,
+  "teams": [
+    {
+      "id": 2,
+      "isWinner": false,
+      "score": 0,
+      "players": [
+        {
+          "steamId": "76561198070058334",
+          "isAbandoned": true,
+          "hero": "npc_dota_hero_disruptor",
+          "kills": 0,
+          "deaths": 0,
+          "assists": 0,
+          "lastHits": 0,
+          "denies": 0,
+          "abilities": {
+            "picks": [
+              "ogre_magi_bloodlust_op",
+              "obsidian_destroyer_astral_imprisonment_redux",
+              "spell_lab_souls_damage",
+              "forest_troll_high",
+              "beastmaster_axes",
+              "tiny_toss"
+            ],
+            "bans": [
+              "tiny_toss"
+            ]
+          },
+          "items": [
+            {
+              "name": "item_tpscroll",
+              "charges": 2
+            },
+            {
+              "name": "item_devDagger",
+              "charges": 0
             }
-         ]
-      },
-      {  
-         "id":3,
-         "isWinner":true,
-         "score":0,
-         "players":[  
-            {  
-               "steamId":"76561198070058335",
-               "isAbandoned":false,
-               "hero":"npc_dota_hero_disruptor",
-               "kills":0,
-               "deaths":0,
-               "assists":0,
-               "lastHits":0,
-               "denies":0,
-               "abilities":{  
-                  "picks":[  
-                     "ogre_magi_bloodlust_op",
-                     "obsidian_destroyer_astral_imprisonment_redux",
-                     "spell_lab_souls_damage",
-                     "forest_troll_high_priest_mana_aura",
-                     "beastmaster_wild_axes",
-                     "tiny_toss"
-                  ],
-                  "bans":[  
-                     "tiny_toss"
-                  ]
-               },
-               "items":[  
-                  {  
-                     "name":"item_tpscroll",
-                     "charges":2
-                  },
-                  {  
-                     "name":"item_devDagger",
-                     "charges":0
-                  }
-               ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "isWinner": true,
+      "score": 0,
+      "players": [
+        {
+          "steamId": "76561198070058335",
+          "isAbandoned": false,
+          "hero": "npc_dota_hero_disruptor",
+          "kills": 0,
+          "deaths": 0,
+          "assists": 0,
+          "lastHits": 0,
+          "denies": 0,
+          "abilities": {
+            "picks": [
+              "ogre_magi_bloodlust_op",
+              "obsidian_destroyer_astral_imprisonment_redux",
+              "spell_lab_souls_damage",
+              "forest_troll_high_priest_mana_aura",
+              "beastmaster_wild_axes",
+              "tiny_toss"
+            ],
+            "bans": [
+              "tiny_toss"
+            ]
+          },
+          "items": [
+            {
+              "name": "item_tpscroll",
+              "charges": 2
+            },
+            {
+              "name": "item_devDagger",
+              "charges": 0
             }
-         ]
-      }
-   ],
-   "gameOptions":{  
+          ]
+        }
+      ]
+    }
+  ],
+  "gameOptions": {
 
-   }
+  }
+}
+
+// Билд
+{
+  "steamID": "76561198070058334",
+  "title": "Test build",
+  "description": "For testing tests",
+  "abilities": [ "ogre_magi_bloodlust_op", "obsidian_destroyer_astral_imprisonment_redux", "spell_lab_souls_damage", "forest_troll_high", "beastmaster_axes", "tiny_toss" ],
+  "heroName": "npc_dota_hero_disruptor",
+  "attribute": "int"
+}
+
+// Голосование за билд
+{
+  "steamID": "76561197960366963",
+  "build": "028141facff7fd93af0ef1c90750f33b",
+  "type": "up"
+}
+
+// Избранное
+{
+  "steamID": "76561197960366963",
+  "build": "028141facff7fd93af0ef1c90750f33b"
+}
+
+// Роли
+{
+  "steamID": [ "76561197960366963", "123451463443523" ],
+  "roles": [ "Developer", "Patrion" ] 
 }
