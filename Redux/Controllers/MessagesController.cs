@@ -32,7 +32,7 @@ namespace Redux.Controllers
                 row.nickname = playersData.SelectToken($"$..players[?(@.steamid == '{row.steamid}')]")["personaname"].ToString();
 
             return new Dictionary<string, object> {
-                { "total", total},
+                { "total", total },
                 { "page", page },
                 { "pageCount", total / pageSize + 1 },
                 { "pageSize", pageSize },
