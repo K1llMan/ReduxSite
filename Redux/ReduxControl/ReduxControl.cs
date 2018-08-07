@@ -60,6 +60,13 @@ namespace Redux
 
             // Делегат проверки пользователя и формирования требований к пользователю
             CheckUser check = d => {
+                #if DEBUG
+                    return new Claim[] {
+                        new Claim(ClaimTypes.Name, "Develop"),
+                        new Claim(ClaimTypes.Role, "Admin")
+                    };
+                #endif
+
                 dynamic row = Settings.DB.Query(
                     "select *" +
                     " from redux_users" +

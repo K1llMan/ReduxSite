@@ -48,7 +48,7 @@ $(function () {
             $('.main-content').append(page);
             
             // Show table
-            context.readyForDisplay(true);            
+            context.readyForDisplay(true);
         }
     }
     

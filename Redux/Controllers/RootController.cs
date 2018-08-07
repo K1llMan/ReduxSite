@@ -51,13 +51,21 @@ namespace Redux.Controllers
             };
 
             // Администратору видна страничка загрузки билдов
-            if (User.IsInRole("Admin"))
+            if (User.IsInRole("Admin")) { 
                 modules.Add("#builds", new Dictionary<string, string> {
                         {"displayName", "Builds"},
                         {"script", "builds.js"},
                         {"template", "builds.tmp"}
                     }
                 );
+
+                modules.Add("#players", new Dictionary<string, string> {
+                        {"displayName", "Players"},
+                        {"script", "players.js"},
+                        {"template", "players.tmp"}
+                    }
+                );
+            }
 
             return modules;
         }
