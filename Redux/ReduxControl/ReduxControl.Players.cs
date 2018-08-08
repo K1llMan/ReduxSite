@@ -96,7 +96,8 @@ namespace Redux
         /// </summary>
         public void SetRoles(JObject data)
         {
-            if (data["steamID"].IsNullOrEmpty())
+            int count = data["steamID"].Select(s => s.ToString()).Count(s => !string.IsNullOrEmpty(s));
+            if (data["steamID"].IsNullOrEmpty() || count == 0)
                 return;
 
             dynamic rows = db.Query(

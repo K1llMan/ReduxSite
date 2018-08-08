@@ -57,6 +57,7 @@ namespace Redux.Controllers
 
         // POST api/players/roles
         [HttpPost("roles")]
+        [Authorize(Roles = "Admin")]
         public object SetRoles()
         {
             try
