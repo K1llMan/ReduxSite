@@ -24,12 +24,17 @@ namespace Redux.Controllers
 
             dynamic rows = Program.Control.Messages.GetMessages(page, pageSize);
             List<string> ids = new List<string>();
-            foreach (dynamic row in rows)
-                ids.Add(row.steamid);
 
-            JToken playersData = Program.Control.Steam.GetPlayersData(ids.Distinct().ToArray());
-            foreach (dynamic row in rows)
-                row.nickname = playersData.SelectToken($"$..players[?(@.steamid == '{row.steamid}')]")["personaname"].ToString();
+            // Добавляются данные об игроке из Steam
+            if (rows != null)
+            {
+                foreach (dynamic row in rows)
+                    ids.Add(row.steamid);
+
+                JToken playersData = Program.Control.Steam.GetPlayersData(ids.Distinct().ToArray());
+                foreach (dynamic row in rows)
+                    row.nickname = playersData.SelectToken($"$..players[?(@.steamid == '{row.steamid}')]")["personaname"].ToString();
+            }
 
             return new Dictionary<string, object> {
                 { "total", total },

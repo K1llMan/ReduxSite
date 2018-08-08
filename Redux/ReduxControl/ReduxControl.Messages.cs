@@ -38,11 +38,13 @@ namespace Redux
         /// </summary>
         public dynamic GetMessages(int page, int count)
         {
-            return db.Query(
+            dynamic rows = db.Query(
                 "select *" +
                 " from redux_messages" +
                 " order by ID desc" +
                 $" limit {count} offset {(page - 1) * count}");
+
+            return rows ?? new object[] { };
         }
 
         /// <summary>
